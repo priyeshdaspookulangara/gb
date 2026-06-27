@@ -33,6 +33,9 @@ $recent_transactions = $stmt->fetchAll();
 
 <div class="glass-card" style="margin-top: 24px;">
     <h3 class="gold-text">System Actions</h3>
+    <?php if (isset($_GET['success'])): ?>
+        <p style="color: #4dff4d; margin-bottom: 10px;">Salaries processed successfully!</p>
+    <?php endif; ?>
     <form method="POST" action="process_salaries.php">
         <button type="submit" class="btn-gold">Process Monthly Salaries</button>
         <p style="font-size: 12px; margin-top: 10px; opacity: 0.7;">This will distribute rank incentives to all qualified promoters for the current month.</p>
