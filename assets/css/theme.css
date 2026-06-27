@@ -1,0 +1,231 @@
+/* assets/css/theme.css */
+
+:root {
+  /* Brand Core Identity */
+  --brand-magenta: #C20067;       /* The deep, vibrant magenta base background */
+  --brand-gold-pure: #E2B747;     /* Solid premium gold for text/accents */
+  --brand-gold-light: #F7E49D;    /* Vibrant gold highlight for borders/glows */
+
+  /* Interface Backgrounds */
+  --bg-dark-premium: #16000D;    /* Ultra-dark premium purple/black for background depth */
+  --glass-surface: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(226, 183, 71, 0.15); /* Soft gold-tinted transparent border */
+
+  /* System States */
+  --state-locked: #64748b;        /* Slate gray for unachieved milestones */
+  --state-glow: 0 0 15px rgba(226, 183, 71, 0.6);
+
+  /* Typography */
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-dark-premium);
+    background-image: radial-gradient(circle at top right, #2a0017, transparent),
+                      radial-gradient(circle at bottom left, #1a000f, transparent);
+    color: #ffffff;
+    font-family: var(--font-main);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Glassmorphic Card Utility */
+.glass-card {
+    background: var(--glass-surface);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: rgba(226, 183, 71, 0.4);
+}
+
+/* Typography Helpers */
+.gold-text {
+    color: var(--brand-gold-pure);
+}
+
+.gold-gradient-text {
+    background: linear-gradient(135deg, #F7E49D 0%, #E2B747 50%, #A37A24 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}
+
+h1, h2, h3, .rank-title {
+    font-family: var(--font-serif);
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn-gold {
+    background: linear-gradient(135deg, #E2B747 0%, #A37A24 100%);
+    color: #000;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-gold:hover {
+    box-shadow: var(--state-glow);
+    transform: translateY(-2px);
+}
+
+/* Progress Bar */
+.progress-container {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    position: relative;
+    margin: 40px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand-magenta), var(--brand-gold-pure));
+    border-radius: 6px;
+    width: 0%;
+    transition: width 1s ease-in-out;
+}
+
+.milestone {
+    position: absolute;
+    top: -30px;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.milestone-node {
+    width: 16px;
+    height: 16px;
+    background: var(--state-locked);
+    border-radius: 50%;
+    margin: 10px auto;
+    border: 2px solid var(--bg-dark-premium);
+}
+
+.milestone.active .milestone-node {
+    background: var(--brand-gold-pure);
+    box-shadow: var(--state-glow);
+}
+
+.milestone-label {
+    font-size: 12px;
+    color: var(--state-locked);
+}
+
+.milestone.active .milestone-label {
+    color: var(--brand-gold-pure);
+}
+
+/* Dashboard Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    padding: 24px;
+}
+
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.5);
+    border-right: 1px solid var(--glass-border);
+    padding: 24px;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 24px;
+}
+
+/* Network Tree */
+.tree-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+}
+
+.tree-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.tree-children {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    position: relative;
+}
+
+.tree-children::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    width: 2px;
+    height: 20px;
+    background: var(--brand-gold-pure);
+    transform: translateX(-50%);
+}
+
+.tree-node .node-card {
+    min-width: 150px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-surface);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.tree-node .node-card:hover {
+    transform: scale(1.05);
+    border-color: var(--brand-gold-pure);
+    box-shadow: var(--state-glow);
+}
+
+.tree-connector-v {
+    width: 2px;
+    height: 20px;
+    background: var(--brand-gold-pure);
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(226, 183, 71, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(226, 183, 71, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(226, 183, 71, 0); }
+}
+
+.milestone.active .milestone-node {
+    animation: pulse 2s infinite;
+}
