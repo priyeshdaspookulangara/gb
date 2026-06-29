@@ -9,8 +9,9 @@
  * @param int $booking_id The ID of the booking.
  */
 function process_card_activation($pdo, $user_id, $booking_id) {
+    $is_manual_transaction = !$pdo->inTransaction();
     try {
-        $pdo->beginTransaction();
+        if ($is_manual_transaction) $pdo->beginTransaction();
 
         // 1. Get user and sponsor info
         $stmt = $pdo->prepare("SELECT sponsor_id FROM users WHERE id = ?");
@@ -64,9 +65,9 @@ function process_card_activation($pdo, $user_id, $booking_id) {
         // 4. Update Booking Status
         $pdo->prepare("UPDATE bookings SET status = 'active', activation_date = NOW() WHERE id = ?")->execute([$booking_id]);
 
-        $pdo->commit();
+        if ($is_manual_transaction) $pdo->commit();
     } catch (Exception $e) {
-        $pdo->rollBack();
+        if ($is_manual_transaction && $pdo->inTransaction()) $pdo->rollBack();
         throw $e;
     }
 }

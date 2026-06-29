@@ -15,6 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $role = $_POST['role'] ?? 'customer';
     $sponsor_name = $_POST['sponsor'] ?? '';
 
+    // Role Whitelist to prevent admin escalation
+    $allowed_roles = ['customer', 'promoter'];
+    if (!in_array($role, $allowed_roles)) {
+        $role = 'customer';
+    }
+
     try {
         $pdo->beginTransaction();
 
