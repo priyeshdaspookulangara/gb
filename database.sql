@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('admin', 'promoter', 'customer') NOT NULL,
     sponsor_id INT DEFAULT NULL,
     kyc_status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
-    rank ENUM('NONE', 'LCE', 'BCE', 'EPE', 'ME', 'SME', 'MM', 'GE', 'CE') DEFAULT 'NONE',
+    `rank` ENUM('NONE', 'LCE', 'BCE', 'EPE', 'ME', 'SME', 'MM', 'GE', 'CE') DEFAULT 'NONE',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sponsor_id) REFERENCES users(id) ON DELETE SET NULL
 );
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS milestone_redemptions (
 CREATE TABLE IF NOT EXISTS monthly_incentives_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    rank ENUM('LCE', 'BCE', 'EPE', 'ME', 'SME', 'MM', 'GE', 'CE') NOT NULL,
+    `rank` ENUM('LCE', 'BCE', 'EPE', 'ME', 'SME', 'MM', 'GE', 'CE') NOT NULL,
     amount DECIMAL(15, 2) NOT NULL,
     month_number INT NOT NULL,
     paid_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS level_configs (
 
 -- Rank Configurations (Monthly Salary)
 CREATE TABLE IF NOT EXISTS rank_configs (
-    rank ENUM('LCE', 'BCE', 'EPE', 'ME', 'SME', 'MM', 'GE', 'CE') PRIMARY KEY,
+    `rank` ENUM('LCE', 'BCE', 'EPE', 'ME', 'SME', 'MM', 'GE', 'CE') PRIMARY KEY,
     team_sales_required INT NOT NULL,
     monthly_incentive DECIMAL(15, 2) NOT NULL
 );
@@ -136,7 +136,7 @@ INSERT INTO level_configs (level, milestone_sales, card_sale_incentive, product_
 (7, 78125, 100, 2, NULL),
 (8, 390625, 100, 1, NULL);
 
-INSERT INTO rank_configs (rank, team_sales_required, monthly_incentive) VALUES
+INSERT INTO rank_configs (`rank`, team_sales_required, monthly_incentive) VALUES
 ('LCE', 5, 1000),
 ('BCE', 25, 2500),
 ('EPE', 125, 10000),

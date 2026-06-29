@@ -7,7 +7,7 @@ require_role('promoter');
 $user_id = $_SESSION['user_id'];
 
 // Get Wallet & Stats
-$stmt = $pdo->prepare("SELECT w.*, s.direct_sales, s.team_sales, u.rank
+$stmt = $pdo->prepare("SELECT w.*, s.direct_sales, s.team_sales, u.`rank`
                        FROM users u
                        LEFT JOIN wallets w ON u.id = w.user_id
                        LEFT JOIN sales_stats s ON u.id = s.user_id

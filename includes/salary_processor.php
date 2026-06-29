@@ -12,7 +12,7 @@ function process_monthly_salaries($pdo) {
         $pdo->beginTransaction();
 
         // Get all users with a rank
-        $stmt = $pdo->query("SELECT id, rank FROM users WHERE rank != 'NONE'");
+        $stmt = $pdo->query("SELECT id, `rank` FROM users WHERE `rank` != 'NONE'");
         $ranked_users = $stmt->fetchAll();
 
         foreach ($ranked_users as $user) {
@@ -20,7 +20,7 @@ function process_monthly_salaries($pdo) {
             $rank = $user['rank'];
 
             // Get monthly incentive for this rank
-            $stmt = $pdo->prepare("SELECT monthly_incentive FROM rank_configs WHERE rank = ?");
+            $stmt = $pdo->prepare("SELECT monthly_incentive FROM rank_configs WHERE `rank` = ?");
             $stmt->execute([$rank]);
             $amount = $stmt->fetchColumn();
 
@@ -37,7 +37,7 @@ function process_monthly_salaries($pdo) {
                     add_income($pdo, $user_id, $amount, 'monthly_incentive', "Monthly Rank Incentive for $rank (Month $month_number)");
 
                     // Log the payment
-                    $stmt = $pdo->prepare("INSERT INTO monthly_incentives_log (user_id, rank, amount, month_number) VALUES (?, ?, ?, ?)");
+                    $stmt = $pdo->prepare("INSERT INTO monthly_incentives_log (user_id, `rank`, amount, month_number) VALUES (?, ?, ?, ?)");
                     $stmt->execute([$user_id, $rank, $amount, $month_number]);
                 }
             }

@@ -8,6 +8,7 @@ $user_id = $_SESSION['user_id'];
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    check_csrf();
     try {
         $pdo->beginTransaction();
 
@@ -50,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <form method="POST" style="margin-top: 20px;">
+            <?php csrf_input(); ?>
             <button type="submit" class="btn-gold" style="width: 100%;">Pay & Activate Now</button>
         </form>
     <?php endif; ?>

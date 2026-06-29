@@ -6,6 +6,7 @@ require_once 'auth/auth_helper.php';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    check_csrf();
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
@@ -48,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p style="color: #ff4d4d;"><?php echo $error; ?></p>
         <?php endif; ?>
         <form method="POST">
+            <?php csrf_input(); ?>
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit" class="btn-gold" style="width: 100%; margin-top: 20px;">Login</button>

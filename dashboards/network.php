@@ -7,7 +7,7 @@ require_role('promoter');
 $user_id = $_SESSION['user_id'];
 
 // Get Downline (1 level for simple list)
-$stmt = $pdo->prepare("SELECT u.username, u.full_name, u.role, u.rank, u.created_at, s.team_sales
+$stmt = $pdo->prepare("SELECT u.username, u.full_name, u.role, u.`rank`, u.created_at, s.team_sales
                        FROM users u
                        LEFT JOIN sales_stats s ON u.id = s.user_id
                        WHERE u.sponsor_id = ?");
@@ -20,7 +20,7 @@ $downline = $stmt->fetchAll();
 function get_tree($pdo, $ancestor_id, $max_level = 3) {
     if ($max_level <= 0) return [];
 
-    $stmt = $pdo->prepare("SELECT u.id, u.username, u.rank, s.team_sales
+    $stmt = $pdo->prepare("SELECT u.id, u.username, u.`rank`, s.team_sales
                            FROM users u
                            LEFT JOIN sales_stats s ON u.id = s.user_id
                            WHERE u.sponsor_id = ?");

@@ -102,17 +102,17 @@ function check_and_upgrade_rank($pdo, $user_id) {
     $team_sales = $stats['team_sales'];
 
     // Get the highest rank the user qualifies for
-    $stmt = $pdo->prepare("SELECT rank FROM rank_configs WHERE team_sales_required <= ? ORDER BY team_sales_required DESC LIMIT 1");
+    $stmt = $pdo->prepare("SELECT `rank` FROM rank_configs WHERE team_sales_required <= ? ORDER BY team_sales_required DESC LIMIT 1");
     $stmt->execute([$team_sales]);
     $new_rank = $stmt->fetchColumn();
 
     if ($new_rank) {
-        $stmt = $pdo->prepare("SELECT rank FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT `rank` FROM users WHERE id = ?");
         $stmt->execute([$user_id]);
         $current_rank = $stmt->fetchColumn();
 
         if ($new_rank != $current_rank) {
-            $pdo->prepare("UPDATE users SET rank = ? WHERE id = ?")->execute([$new_rank, $user_id]);
+            $pdo->prepare("UPDATE users SET `rank` = ? WHERE id = ?")->execute([$new_rank, $user_id]);
         }
     }
 }

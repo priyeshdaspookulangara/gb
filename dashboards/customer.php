@@ -78,8 +78,19 @@ if ($booking && $booking['status'] === 'active') {
     </div>
 
     <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <button class="btn-gold" <?php echo ($days_passed < 120) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month 4 Voucher</button>
-        <button class="btn-gold" <?php echo ($days_passed < 240) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month 8 Voucher</button>
+        <form method="POST" action="claim_voucher.php">
+            <?php csrf_input(); ?>
+            <input type="hidden" name="booking_id" value="<?php echo $booking['id'] ?? 0; ?>">
+            <input type="hidden" name="milestone" value="4_month">
+            <button type="submit" class="btn-gold" <?php echo ($days_passed < 120) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month 4 Voucher</button>
+        </form>
+
+        <form method="POST" action="claim_voucher.php">
+            <?php csrf_input(); ?>
+            <input type="hidden" name="booking_id" value="<?php echo $booking['id'] ?? 0; ?>">
+            <input type="hidden" name="milestone" value="8_month">
+            <button type="submit" class="btn-gold" <?php echo ($days_passed < 240) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month 8 Voucher</button>
+        </form>
     </div>
 </div>
 

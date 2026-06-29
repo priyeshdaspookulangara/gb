@@ -9,6 +9,7 @@ This is a complete backend management and MLM portal for Luxe Gold & Diamonds an
 *   **Global Overview**: Monitor total sales, revenue, and gold liabilities.
 *   **Incentive Processing**: Trigger the "Monthly Salary" process to distribute rank maintenance incentives to qualified promoters.
 *   **Payout Control**: Review and approve withdrawal requests from the e-wallet.
+*   **System Integrity**: The application includes CSRF protection on all POST actions and escapes reserved SQL keywords like `rank`.
 
 ### B. Earn Buy Promoter (The Affiliate)
 *   **Network Building**: Use the personal referral link to recruit new Promoters and Customers.

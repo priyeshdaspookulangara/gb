@@ -7,6 +7,7 @@ $message = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    check_csrf();
     $username = $_POST['username'] ?? '';
     $password = password_hash($_POST['password'] ?? '', PASSWORD_DEFAULT);
     $email = $_POST['email'] ?? '';
@@ -78,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($message): ?><p style="color: #4dff4d;"><?php echo $message; ?></p><?php endif; ?>
 
         <form method="POST">
+            <?php csrf_input(); ?>
             <input type="text" name="full_name" placeholder="Full Name" required>
             <input type="email" name="email" placeholder="Email Address" required>
             <input type="text" name="phone" placeholder="Phone Number" required>

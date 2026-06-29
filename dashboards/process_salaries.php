@@ -8,6 +8,7 @@ require_once '../includes/salary_processor.php';
 require_role('admin');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    check_csrf();
     if (process_monthly_salaries($pdo)) {
         header("Location: admin.php?success=1");
     } else {
