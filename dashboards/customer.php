@@ -91,6 +91,13 @@ if ($booking && $booking['status'] === 'active') {
             <input type="hidden" name="milestone" value="8_month">
             <button type="submit" class="btn-gold" <?php echo ($days_passed < 240) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month 8 Voucher</button>
         </form>
+
+        <form method="POST" action="claim_voucher.php">
+            <?php csrf_input(); ?>
+            <input type="hidden" name="booking_id" value="<?php echo $booking['id'] ?? 0; ?>">
+            <input type="hidden" name="milestone" value="11_month">
+            <button type="submit" class="btn-gold" <?php echo ($days_passed < 330) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month 11 Maturity</button>
+        </form>
     </div>
 </div>
 

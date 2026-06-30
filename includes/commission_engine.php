@@ -18,14 +18,10 @@ function process_card_activation($pdo, $user_id, $booking_id) {
         $stmt->execute([$user_id]);
         $user = $stmt->fetch();
 
-        if (!$user || !$user['sponsor_id']) {
-            $pdo->commit();
-            return;
-        }
+        $sponsor_id = ($user && isset($user['sponsor_id'])) ? $user['sponsor_id'] : null;
 
-        $sponsor_id = $user['sponsor_id'];
-
-        // 2. Direct Referral Incentive (Rs. 2,000)
+        if ($sponsor_id) {
+            // 2. Direct Referral Incentive (Rs. 2,000)
         $direct_incentive = 2000;
         add_income($pdo, $sponsor_id, $direct_incentive, 'referral_incentive', "Direct referral incentive for user ID: $user_id");
 
@@ -55,11 +51,12 @@ function process_card_activation($pdo, $user_id, $booking_id) {
             // Check for Rank Upgrade
             check_and_upgrade_rank($pdo, $current_sponsor);
 
-            // Move up to the next sponsor
-            $stmt = $pdo->prepare("SELECT sponsor_id FROM users WHERE id = ?");
-            $stmt->execute([$current_sponsor]);
-            $result = $stmt->fetch();
-            $current_sponsor = $result ? $result['sponsor_id'] : null;
+                // Move up to the next sponsor
+                $stmt = $pdo->prepare("SELECT sponsor_id FROM users WHERE id = ?");
+                $stmt->execute([$current_sponsor]);
+                $result = $stmt->fetch();
+                $current_sponsor = $result ? $result['sponsor_id'] : null;
+            }
         }
 
         // 4. Update Booking Status
