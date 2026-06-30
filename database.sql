@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS sales_stats (
 
 -- Level Configurations
 CREATE TABLE IF NOT EXISTS level_configs (
-    level INT PRIMARY KEY,
+    `level` INT PRIMARY KEY,
     milestone_sales INT NOT NULL,
     card_sale_incentive DECIMAL(15, 2) NOT NULL,
     product_sale_per_point DECIMAL(15, 2) NOT NULL,
@@ -126,7 +126,7 @@ INSERT INTO settings (setting_key, setting_value) VALUES
 ('direct_referral_incentive', '2000'),
 ('bullion_sales_metric', '0');
 
-INSERT INTO level_configs (level, milestone_sales, card_sale_incentive, product_sale_per_point, rank_name) VALUES
+INSERT INTO level_configs (`level`, milestone_sales, card_sale_incentive, product_sale_per_point, rank_name) VALUES
 (1, 5, 1000, 30, 'LCE'),
 (2, 25, 750, 20, 'BCE'),
 (3, 125, 500, 10, 'EPE'),

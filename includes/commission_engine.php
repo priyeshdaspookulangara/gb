@@ -43,7 +43,7 @@ function process_card_activation($pdo, $user_id, $booking_id) {
                            ON DUPLICATE KEY UPDATE team_sales = team_sales + 1")->execute([$current_sponsor]);
 
             // Get level incentive amount
-            $stmt = $pdo->prepare("SELECT card_sale_incentive FROM level_configs WHERE level = ?");
+            $stmt = $pdo->prepare("SELECT card_sale_incentive FROM level_configs WHERE `level` = ?");
             $stmt->execute([$level]);
             $level_config = $stmt->fetch();
 

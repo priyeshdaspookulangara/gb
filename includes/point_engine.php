@@ -17,7 +17,7 @@ function process_product_sale($pdo, $user_id, $points) {
             if (!$current_sponsor) break;
 
             // Get product sale incentive per point for this level
-            $stmt = $pdo->prepare("SELECT product_sale_per_point FROM level_configs WHERE level = ?");
+            $stmt = $pdo->prepare("SELECT product_sale_per_point FROM level_configs WHERE `level` = ?");
             $stmt->execute([$level]);
             $per_point = $stmt->fetchColumn();
 
