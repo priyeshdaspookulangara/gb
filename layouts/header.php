@@ -21,6 +21,7 @@ require_login();
                 <?php if ($_SESSION['role'] === 'admin'): ?>
                     <li style="margin-bottom: 20px;"><a href="admin_users.php" style="color: white; text-decoration: none;">Manage Users</a></li>
                     <li style="margin-bottom: 20px;"><a href="admin_bookings.php" style="color: white; text-decoration: none;">Bookings</a></li>
+                    <li style="margin-bottom: 20px;"><a href="admin_reports.php" style="color: white; text-decoration: none;">Financial Reports</a></li>
                 <?php endif; ?>
                 <?php if ($_SESSION['role'] === 'promoter'): ?>
                     <li style="margin-bottom: 20px;"><a href="network.php" style="color: white; text-decoration: none;">My Network</a></li>
