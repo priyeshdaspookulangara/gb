@@ -1,7 +1,7 @@
 <?php
 // dashboards/admin_users.php
 require_once '../config/db.php';
-require_once '../layouts/header.php';
+require_once '../auth/auth_helper.php';
 require_role('admin');
 
 // Handle KYC Approval/Rejection
@@ -13,6 +13,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
     exit();
 }
 
+require_once '../layouts/header.php';
 $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY created_at DESC")->fetchAll();
 ?>
 

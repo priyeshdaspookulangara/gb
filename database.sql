@@ -147,4 +147,4 @@ INSERT INTO rank_configs (`rank`, team_sales_required, monthly_incentive) VALUES
 ('CE', 390625, 1000000);
 
 INSERT INTO users (username, password, email, full_name, phone, role, kyc_status)
-VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@luxegold.com', 'Super Admin', '0000000000', 'admin', 'approved');
+VALUES ('admin', '$2y$10$qnAY5ZrrQ444Sr4j07aiEODHw6EaWRiR01yqkoNIqC0GY4URO5qgu', 'admin@luxegold.com', 'Super Admin', '0000000000', 'admin', 'approved');

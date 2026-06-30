@@ -1,5 +1,5 @@
 -- Seed data for Gold Bullion System
--- All passwords are 'password' (Hash: $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi)
+-- Admin password is 'admin123', others are 'password'
 
 USE gold_bullion_system;
 

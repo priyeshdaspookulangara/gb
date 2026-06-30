@@ -25,6 +25,11 @@ function process_monthly_salaries($pdo) {
             $amount = $stmt->fetchColumn();
 
             if ($amount > 0) {
+                // Check if already paid this month
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM monthly_incentives_log WHERE user_id = ? AND paid_at >= DATE_FORMAT(NOW() ,'%Y-%m-01')");
+                $stmt->execute([$user_id]);
+                if ($stmt->fetchColumn() > 0) continue; // Already paid this month
+
                 // Check how many times this has been paid
                 $stmt = $pdo->prepare("SELECT COUNT(*) FROM monthly_incentives_log WHERE user_id = ?");
                 $stmt->execute([$user_id]);
