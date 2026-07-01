@@ -25,6 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
+        // Handle Profile Picture
+        if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] === UPLOAD_ERR_OK) {
+            $allowed = ['jpg', 'jpeg', 'png'];
+            $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
+            if (in_array($ext, $allowed)) {
+                $filename = "pp_" . $user_id . "_" . time() . "." . $ext;
+                if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], "../uploads/profile/" . $filename)) {
+                    $pdo->prepare("UPDATE users SET profile_pic = ? WHERE id = ?")->execute([$filename, $user_id]);
+                    $_SESSION['profile_pic'] = $filename;
+                }
+            }
+        }
+
         // 1. Update basic info
         $stmt = $pdo->prepare("UPDATE users SET full_name = ?, email = ?, phone = ?, bank_name = ?, account_holder = ?, account_number = ?, ifsc_code = ?, branch_name = ? WHERE id = ?");
         $stmt->execute([$full_name, $email, $phone, $bank_name, $account_holder, $account_number, $ifsc_code, $branch_name, $user_id]);
@@ -63,8 +76,16 @@ require_once '../layouts/header.php';
     <?php if ($message): ?><p style="color: #4dff4d; margin-top: 15px;"><?php echo $message; ?></p><?php endif; ?>
     <?php if ($error): ?><p style="color: #ff4d4d; margin-top: 15px;"><?php echo $error; ?></p><?php endif; ?>
 
-    <form method="POST" style="margin-top: 25px;">
+    <form method="POST" enctype="multipart/form-data" style="margin-top: 25px;">
         <?php csrf_input(); ?>
+
+        <div style="text-align: center; margin-bottom: 25px;">
+            <?php
+            $pp = $user['profile_pic'] ? "../uploads/profile/".$user['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($user['full_name'])."&background=random";
+            ?>
+            <img src="<?php echo $pp; ?>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--brand-gold-pure); margin-bottom: 10px;">
+            <input type="file" name="profile_pic" style="display: block; margin: 10px auto; font-size: 12px; color: #ccc;">
+        </div>
 
         <div style="margin-bottom: 15px;">
             <label style="display: block; font-size: 14px; margin-bottom: 5px;">Full Name</label>

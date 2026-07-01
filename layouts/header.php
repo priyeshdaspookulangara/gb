@@ -40,7 +40,13 @@ require_login();
                 <h3 style="margin: 0;">Welcome, <?php echo htmlspecialchars($_SESSION['full_name']); ?></h3>
                 <p style="color: var(--brand-gold-pure); font-size: 14px;"><?php echo strtoupper($_SESSION['role']); ?></p>
             </div>
-            <div class="glass-card" style="padding: 10px 20px; border-radius: 30px;">
-                <span id="live-time"></span>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="glass-card" style="padding: 10px 20px; border-radius: 30px;">
+                    <span id="live-time"></span>
+                </div>
+                <?php
+                $pp = (isset($_SESSION['profile_pic']) && $_SESSION['profile_pic']) ? "../uploads/profile/".$_SESSION['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($_SESSION['full_name'])."&background=random";
+                ?>
+                <img src="<?php echo $pp; ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
             </div>
         </header>

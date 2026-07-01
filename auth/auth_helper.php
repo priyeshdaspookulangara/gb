@@ -29,6 +29,7 @@ function login_user($user) {
     $_SESSION['username'] = $user['username'];
     $_SESSION['role'] = $user['role'];
     $_SESSION['full_name'] = $user['full_name'];
+    $_SESSION['profile_pic'] = $user['profile_pic'];
 }
 
 function logout_user() {
