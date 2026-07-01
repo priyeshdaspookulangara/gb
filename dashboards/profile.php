@@ -83,9 +83,21 @@ require_once '../layouts/header.php';
             <?php
             $pp = $user['profile_pic'] ? "../uploads/profile/".$user['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($user['full_name'])."&background=random";
             ?>
-            <img src="<?php echo $pp; ?>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--brand-gold-pure); margin-bottom: 10px;">
-            <input type="file" name="profile_pic" style="display: block; margin: 10px auto; font-size: 12px; color: #ccc;">
+            <img id="pp-preview" src="<?php echo $pp; ?>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--brand-gold-pure); margin-bottom: 10px;">
+            <input type="file" name="profile_pic" id="pp-input" onchange="previewPP(this)" style="display: block; margin: 10px auto; font-size: 12px; color: #ccc;">
         </div>
+
+        <script>
+            function previewPP(input) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('pp-preview').src = e.target.result;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
 
         <div style="margin-bottom: 15px;">
             <label style="display: block; font-size: 14px; margin-bottom: 5px;">Full Name</label>

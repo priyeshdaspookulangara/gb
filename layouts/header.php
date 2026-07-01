@@ -46,8 +46,8 @@ require_login();
                     <span id="live-time"></span>
                 </div>
                 <?php
-                $pp = (isset($_SESSION['profile_pic']) && $_SESSION['profile_pic']) ? "../uploads/profile/".$_SESSION['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($_SESSION['full_name'])."&background=random";
+                $pp_path = (isset($_SESSION['profile_pic']) && $_SESSION['profile_pic']) ? "../uploads/profile/".$_SESSION['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($_SESSION['full_name'])."&background=random";
                 ?>
-                <img src="<?php echo $pp; ?>" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
+                <img src="<?php echo $pp_path; ?>" alt="Profile" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
             </div>
         </header>
