@@ -24,10 +24,22 @@ CREATE TABLE IF NOT EXISTS bookings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     amount DECIMAL(15, 2) DEFAULT 36000.00,
+    payment_method ENUM('gateway', 'epin') DEFAULT 'gateway',
     status ENUM('pending', 'active', 'completed') DEFAULT 'pending',
     activation_date TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ePins Table
+CREATE TABLE IF NOT EXISTS epins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pin_code VARCHAR(20) UNIQUE NOT NULL,
+    amount DECIMAL(15, 2) NOT NULL,
+    status ENUM('unused', 'used') DEFAULT 'unused',
+    user_id INT DEFAULT NULL, -- Who used it
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Wallets Table
