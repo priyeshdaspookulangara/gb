@@ -15,6 +15,11 @@ CREATE TABLE IF NOT EXISTS users (
     sponsor_id INT DEFAULT NULL,
     kyc_status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     `rank` ENUM('NONE', 'LCE', 'BCE', 'EPE', 'ME', 'SME', 'MM', 'GE', 'CE') DEFAULT 'NONE',
+    bank_name VARCHAR(100) DEFAULT NULL,
+    account_holder VARCHAR(100) DEFAULT NULL,
+    account_number VARCHAR(50) DEFAULT NULL,
+    ifsc_code VARCHAR(20) DEFAULT NULL,
+    branch_name VARCHAR(100) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sponsor_id) REFERENCES users(id) ON DELETE SET NULL
 );

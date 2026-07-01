@@ -36,6 +36,13 @@ $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY created
                     <td style="padding: 10px;">
                         <strong><?php echo htmlspecialchars($user['full_name']); ?></strong><br>
                         <small><?php echo htmlspecialchars($user['username']); ?> | <?php echo $user['phone']; ?></small>
+                        <div style="font-size: 10px; margin-top: 5px; opacity: 0.8;">
+                            <?php if ($user['bank_name']): ?>
+                                Bank: <?php echo htmlspecialchars($user['bank_name']); ?> (<?php echo htmlspecialchars($user['account_number']); ?>)
+                            <?php else: ?>
+                                <span style="color: #ff4d4d;">No Bank Details</span>
+                            <?php endif; ?>
+                        </div>
                     </td>
                     <td style="padding: 10px;"><?php echo strtoupper($user['role']); ?></td>
                     <td style="padding: 10px;">

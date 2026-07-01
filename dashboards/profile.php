@@ -14,6 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'] ?? '';
     $email = $_POST['email'] ?? '';
     $phone = $_POST['phone'] ?? '';
+    $bank_name = $_POST['bank_name'] ?? '';
+    $account_holder = $_POST['account_holder'] ?? '';
+    $account_number = $_POST['account_number'] ?? '';
+    $ifsc_code = $_POST['ifsc_code'] ?? '';
+    $branch_name = $_POST['branch_name'] ?? '';
     $new_password = $_POST['new_password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
@@ -21,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->beginTransaction();
 
         // 1. Update basic info
-        $stmt = $pdo->prepare("UPDATE users SET full_name = ?, email = ?, phone = ? WHERE id = ?");
-        $stmt->execute([$full_name, $email, $phone, $user_id]);
+        $stmt = $pdo->prepare("UPDATE users SET full_name = ?, email = ?, phone = ?, bank_name = ?, account_holder = ?, account_number = ?, ifsc_code = ?, branch_name = ? WHERE id = ?");
+        $stmt->execute([$full_name, $email, $phone, $bank_name, $account_holder, $account_number, $ifsc_code, $branch_name, $user_id]);
 
         // 2. Handle password update
         if (!empty($new_password)) {
@@ -94,6 +99,43 @@ require_once '../layouts/header.php';
             <label style="display: block; font-size: 14px; margin-bottom: 5px;">Confirm New Password</label>
             <input type="password" name="confirm_password"
                    style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 25px 0;">
+
+        <h3 class="gold-text" style="font-size: 18px; margin-bottom: 15px;">Bank Details</h3>
+        <p style="font-size: 12px; opacity: 0.7; margin-bottom: 15px;">Required for withdrawing your earnings.</p>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 14px; margin-bottom: 5px;">Bank Name</label>
+            <input type="text" name="bank_name" value="<?php echo htmlspecialchars($user['bank_name'] ?? ''); ?>"
+                   style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+                <label style="display: block; font-size: 14px; margin-bottom: 5px;">Account Holder</label>
+                <input type="text" name="account_holder" value="<?php echo htmlspecialchars($user['account_holder'] ?? ''); ?>"
+                       style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
+            </div>
+            <div>
+                <label style="display: block; font-size: 14px; margin-bottom: 5px;">Account Number</label>
+                <input type="text" name="account_number" value="<?php echo htmlspecialchars($user['account_number'] ?? ''); ?>"
+                       style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+                <label style="display: block; font-size: 14px; margin-bottom: 5px;">IFSC Code</label>
+                <input type="text" name="ifsc_code" value="<?php echo htmlspecialchars($user['ifsc_code'] ?? ''); ?>"
+                       style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
+            </div>
+            <div>
+                <label style="display: block; font-size: 14px; margin-bottom: 5px;">Branch Name</label>
+                <input type="text" name="branch_name" value="<?php echo htmlspecialchars($user['branch_name'] ?? ''); ?>"
+                       style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
+            </div>
         </div>
 
         <button type="submit" class="btn-gold" style="width: 100%; margin-top: 20px;">Save Profile Changes</button>

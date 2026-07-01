@@ -6,10 +6,11 @@ require_login();
 
 $user_id = $_SESSION['user_id'];
 
-// Get Wallet and Transaction History
-$stmt = $pdo->prepare("SELECT * FROM wallets WHERE user_id = ?");
+// Get User and Wallet
+$stmt = $pdo->prepare("SELECT u.bank_name, w.* FROM users u JOIN wallets w ON u.id = w.user_id WHERE u.id = ?");
 $stmt->execute([$user_id]);
-$wallet = $stmt->fetch();
+$data = $stmt->fetch();
+$wallet = $data;
 
 $stmt = $pdo->prepare("SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->execute([$user_id]);
@@ -20,7 +21,13 @@ $transactions = $stmt->fetchAll();
     <div class="glass-card">
         <h4 class="gold-text">Available Balance</h4>
         <h2 class="gold-gradient-text" style="font-size: 36px;">Rs. <?php echo number_format($wallet['balance'] ?? 0, 2); ?></h2>
-        <button class="btn-gold" style="margin-top: 20px; width: 100%;">Withdraw Funds</button>
+
+        <?php if ($data['bank_name']): ?>
+            <button class="btn-gold" style="margin-top: 20px; width: 100%;">Withdraw Funds</button>
+        <?php else: ?>
+            <p style="color: #ff4d4d; font-size: 12px; margin-top: 15px;">Please <a href="profile.php" class="gold-text">update bank details</a> to withdraw.</p>
+            <button class="btn-gold" style="margin-top: 10px; width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>Withdraw Funds</button>
+        <?php endif; ?>
     </div>
 
     <div class="glass-card">
