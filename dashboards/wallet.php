@@ -36,6 +36,7 @@ $transactions = $stmt->fetchAll();
     <div class="glass-card">
         <h4 class="gold-text">Lifetime Earnings</h4>
         <h2 style="font-size: 36px;">Rs. <?php echo number_format($wallet['total_earned'] ?? 0, 2); ?></h2>
+        <p style="font-size: 12px; color: #ff4d4d;">Total TDS Deducted: Rs. <?php echo number_format($wallet['total_tds'] ?? 0, 2); ?></p>
     </div>
 </div>
 
@@ -46,7 +47,8 @@ $transactions = $stmt->fetchAll();
             <tr style="border-bottom: 2px solid var(--glass-border);">
                 <th style="text-align: left; padding: 10px;">Type</th>
                 <th style="text-align: left; padding: 10px;">Description</th>
-                <th style="text-align: right; padding: 10px;">Amount</th>
+                <th style="text-align: right; padding: 10px;">Net Amount</th>
+                <th style="text-align: right; padding: 10px;">TDS</th>
                 <th style="text-align: left; padding: 10px;">Date</th>
             </tr>
         </thead>
@@ -59,6 +61,7 @@ $transactions = $stmt->fetchAll();
                         <td style="padding: 10px;"><?php echo str_replace('_', ' ', strtoupper($tx['type'])); ?></td>
                         <td style="padding: 10px; font-size: 14px; opacity: 0.8;"><?php echo htmlspecialchars($tx['description']); ?></td>
                         <td style="padding: 10px; text-align: right;" class="gold-text">Rs. <?php echo number_format($tx['amount'], 2); ?></td>
+                        <td style="padding: 10px; text-align: right; color: #ff4d4d;">Rs. <?php echo number_format($tx['tds_amount'], 2); ?></td>
                         <td style="padding: 10px; font-size: 12px;"><?php echo date('d M Y H:i', strtotime($tx['created_at'])); ?></td>
                     </tr>
                 <?php endforeach; ?>

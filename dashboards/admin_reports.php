@@ -8,7 +8,8 @@ require_once '../layouts/header.php';
 
 // Financial Metrics
 $revenue = $pdo->query("SELECT SUM(amount) FROM bookings WHERE status = 'active'")->fetchColumn();
-$commissions = $pdo->query("SELECT type, SUM(amount) as total FROM transactions WHERE type IN ('referral_incentive', 'level_incentive', 'monthly_incentive') GROUP BY type")->fetchAll();
+$commissions = $pdo->query("SELECT type, SUM(amount + tds_amount) as total FROM transactions WHERE type IN ('referral_incentive', 'level_incentive', 'monthly_incentive') GROUP BY type")->fetchAll();
+$total_tds = $pdo->query("SELECT SUM(tds_amount) FROM transactions")->fetchColumn();
 $redemptions = $pdo->query("SELECT SUM(amount) FROM milestone_redemptions WHERE status = 'approved'")->fetchColumn();
 $liabilities = $pdo->query("SELECT COUNT(*) * 66000 FROM bookings WHERE status = 'active'")->fetchColumn();
 
@@ -41,6 +42,15 @@ $sales_trend = $pdo->query("SELECT DATE(created_at) as date, COUNT(*) as count, 
         <p style="font-size: 12px; opacity: 0.7;">Potential gold value owed at 11-month maturity.</p>
     </div>
 
+    <!-- TDS Widget -->
+    <div class="glass-card">
+        <h4 class="gold-text">Total TDS Collected</h4>
+        <h2 style="font-size: 32px; color: #4dff4d;">Rs. <?php echo number_format($total_tds ?? 0, 2); ?></h2>
+        <p style="font-size: 12px; opacity: 0.7;">Total tax deducted from all incentives.</p>
+    </div>
+</div>
+
+<div class="dashboard-grid" style="margin-top: 24px;">
     <!-- Payout Widget -->
     <div class="glass-card">
         <h4 class="gold-text">Total Redemptions</h4>

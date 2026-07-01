@@ -70,20 +70,25 @@ function process_card_activation($pdo, $user_id, $booking_id) {
 }
 
 /**
- * Add income to user's wallet and log transaction
+ * Add income to user's wallet and log transaction with TDS deduction
  */
-function add_income($pdo, $user_id, $amount, $type, $description) {
-    // Ensure wallet exists
+function add_income($pdo, $user_id, $gross_amount, $type, $description) {
+    // 1. Get TDS settings
+    $tds_percent = (float)get_setting($pdo, 'tds_percentage');
+    $tds_amount = ($gross_amount * $tds_percent) / 100;
+    $net_amount = $gross_amount - $tds_amount;
+
+    // 2. Ensure wallet exists
     $pdo->prepare("INSERT IGNORE INTO wallets (user_id) VALUES (?)")->execute([$user_id]);
 
-    // Update wallet
+    // 3. Update wallet (Credit Net Amount to Balance, but Track Gross in total_earned)
     $column = ($type == 'referral_incentive') ? 'referral_income' : (($type == 'level_incentive') ? 'level_income' : 'rank_income');
-    $sql = "UPDATE wallets SET balance = balance + ?, $column = $column + ?, total_earned = total_earned + ? WHERE user_id = ?";
-    $pdo->prepare($sql)->execute([$amount, $amount, $amount, $user_id]);
+    $sql = "UPDATE wallets SET balance = balance + ?, $column = $column + ?, total_earned = total_earned + ?, total_tds = total_tds + ? WHERE user_id = ?";
+    $pdo->prepare($sql)->execute([$net_amount, $gross_amount, $gross_amount, $tds_amount, $user_id]);
 
-    // Log transaction
-    $pdo->prepare("INSERT INTO transactions (user_id, amount, type, description) VALUES (?, ?, ?, ?)")
-        ->execute([$user_id, $amount, $type, $description]);
+    // 4. Log transaction
+    $pdo->prepare("INSERT INTO transactions (user_id, amount, tds_amount, type, description) VALUES (?, ?, ?, ?, ?)")
+        ->execute([$user_id, $net_amount, $tds_amount, $type, $description]);
 }
 
 /**
