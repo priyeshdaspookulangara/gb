@@ -85,6 +85,8 @@ CREATE TABLE IF NOT EXISTS milestone_redemptions (
     user_id INT NOT NULL,
     milestone ENUM('4_month', '8_month', '11_month') NOT NULL,
     amount DECIMAL(15, 2) NOT NULL,
+    gift_product VARCHAR(100) DEFAULT NULL,
+    points_awarded INT DEFAULT 0,
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     claimed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
@@ -99,6 +101,18 @@ CREATE TABLE IF NOT EXISTS monthly_incentives_log (
     amount DECIMAL(15, 2) NOT NULL,
     month_number INT NOT NULL,
     paid_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Withdrawals Table
+CREATE TABLE IF NOT EXISTS withdrawals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    amount DECIMAL(15, 2) NOT NULL,
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    admin_remark TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

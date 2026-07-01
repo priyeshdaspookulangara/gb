@@ -29,7 +29,7 @@ $transactions = $stmt->fetchAll();
             <p style="color: #ff4d4d; font-size: 12px; margin-top: 15px;">Please <a href="profile.php" class="gold-text">update bank details</a> to withdraw.</p>
             <button class="btn-gold" style="margin-top: 10px; width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>Withdraw Funds</button>
         <?php else: ?>
-            <button class="btn-gold" style="margin-top: 20px; width: 100%;">Withdraw Funds</button>
+            <a href="request_withdrawal.php" class="btn-gold" style="margin-top: 20px; width: 100%; text-align: center;">Withdraw Funds</a>
         <?php endif; ?>
     </div>
 
