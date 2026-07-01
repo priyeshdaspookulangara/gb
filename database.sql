@@ -141,6 +141,15 @@ CREATE TABLE IF NOT EXISTS settings (
     setting_value TEXT
 );
 
+-- Password Resets Table
+CREATE TABLE IF NOT EXISTS password_resets (
+    email VARCHAR(100) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    INDEX (email),
+    INDEX (token)
+);
+
 -- Initial Data
 INSERT INTO settings (setting_key, setting_value) VALUES
 ('booking_amount', '36000'),
