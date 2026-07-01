@@ -49,13 +49,22 @@ $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY created
                         <span style="color: <?php echo ($user['kyc_status'] == 'approved') ? '#4dff4d' : (($user['kyc_status'] == 'rejected') ? '#ff4d4d' : '#ffcc00'); ?>">
                             <?php echo strtoupper($user['kyc_status']); ?>
                         </span>
+                        <?php if ($user['kyc_aadhaar']): ?>
+                            <div style="margin-top: 5px; font-size: 10px;">
+                                <a href="../uploads/kyc/<?php echo $user['kyc_aadhaar']; ?>" target="_blank" style="color: var(--brand-gold-pure);">Aadhaar</a> |
+                                <a href="../uploads/kyc/<?php echo $user['kyc_pan']; ?>" target="_blank" style="color: var(--brand-gold-pure);">PAN</a> |
+                                <a href="../uploads/kyc/<?php echo $user['kyc_bank']; ?>" target="_blank" style="color: var(--brand-gold-pure);">Bank</a>
+                            </div>
+                        <?php endif; ?>
                     </td>
                     <td style="padding: 10px; text-align: right;">
                         <?php if ($user['kyc_status'] == 'pending'): ?>
                             <a href="?action=approve&id=<?php echo $user['id']; ?>" class="gold-text" style="margin-right: 10px;">Approve</a>
                             <a href="?action=reject&id=<?php echo $user['id']; ?>" style="color: #ff4d4d;">Reject</a>
+                        <?php elseif ($user['kyc_status'] == 'approved'): ?>
+                            <a href="?action=reject&id=<?php echo $user['id']; ?>" style="color: #ff4d4d; font-size: 11px;">Revoke</a>
                         <?php else: ?>
-                            --
+                            <a href="?action=approve&id=<?php echo $user['id']; ?>" class="gold-text" style="font-size: 11px;">Re-Approve</a>
                         <?php endif; ?>
                     </td>
                 </tr>

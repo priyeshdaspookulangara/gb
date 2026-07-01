@@ -25,6 +25,7 @@ require_login();
                     <li style="margin-bottom: 20px;"><a href="admin_reports.php" style="color: white; text-decoration: none;">Financial Reports</a></li>
                 <?php endif; ?>
                 <li style="margin-bottom: 20px;"><a href="profile.php" style="color: white; text-decoration: none;">My Profile</a></li>
+                <li style="margin-bottom: 20px;"><a href="kyc.php" style="color: white; text-decoration: none;">KYC Verification</a></li>
                 <?php if ($_SESSION['role'] === 'promoter'): ?>
                     <li style="margin-bottom: 20px;"><a href="network.php" style="color: white; text-decoration: none;">My Network</a></li>
                 <?php endif; ?>
