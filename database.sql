@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS wallets (
     rank_income DECIMAL(15, 2) DEFAULT 0.00,
     total_earned DECIMAL(15, 2) DEFAULT 0.00,
     total_tds DECIMAL(15, 2) DEFAULT 0.00,
+    total_service_charge DECIMAL(15, 2) DEFAULT 0.00,
     reward_points INT DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -69,6 +70,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     user_id INT NOT NULL,
     amount DECIMAL(15, 2) NOT NULL, -- Net Amount
     tds_amount DECIMAL(15, 2) DEFAULT 0.00,
+    service_charge DECIMAL(15, 2) DEFAULT 0.00,
     type ENUM('referral_incentive', 'level_incentive', 'monthly_incentive', 'withdrawal', 'booking_payment', 'milestone_redemption') NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -143,6 +145,7 @@ CREATE TABLE IF NOT EXISTS settings (
 INSERT INTO settings (setting_key, setting_value) VALUES
 ('booking_amount', '36000'),
 ('tds_percentage', '5'),
+('service_charge_percentage', '10'),
 ('total_maturation', '66000'),
 ('month_4_redemption', '16000'),
 ('month_8_redemption', '20000'),

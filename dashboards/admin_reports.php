@@ -8,8 +8,9 @@ require_once '../layouts/header.php';
 
 // Financial Metrics
 $revenue = $pdo->query("SELECT SUM(amount) FROM bookings WHERE status = 'active'")->fetchColumn();
-$commissions = $pdo->query("SELECT type, SUM(amount + tds_amount) as total FROM transactions WHERE type IN ('referral_incentive', 'level_incentive', 'monthly_incentive') GROUP BY type")->fetchAll();
+$commissions = $pdo->query("SELECT type, SUM(amount + tds_amount + service_charge) as total FROM transactions WHERE type IN ('referral_incentive', 'level_incentive', 'monthly_incentive') GROUP BY type")->fetchAll();
 $total_tds = $pdo->query("SELECT SUM(tds_amount) FROM transactions")->fetchColumn();
+$total_sc = $pdo->query("SELECT SUM(service_charge) FROM transactions")->fetchColumn();
 $redemptions = $pdo->query("SELECT SUM(amount) FROM milestone_redemptions WHERE status = 'approved'")->fetchColumn();
 $liabilities = $pdo->query("SELECT COUNT(*) * 66000 FROM bookings WHERE status = 'active'")->fetchColumn();
 
@@ -47,6 +48,13 @@ $sales_trend = $pdo->query("SELECT DATE(created_at) as date, COUNT(*) as count, 
         <h4 class="gold-text">Total TDS Collected</h4>
         <h2 style="font-size: 32px; color: #4dff4d;">Rs. <?php echo number_format($total_tds ?? 0, 2); ?></h2>
         <p style="font-size: 12px; opacity: 0.7;">Total tax deducted from all incentives.</p>
+    </div>
+
+    <!-- SC Widget -->
+    <div class="glass-card">
+        <h4 class="gold-text">Total Service Charges</h4>
+        <h2 style="font-size: 32px; color: #4dff4d;">Rs. <?php echo number_format($total_sc ?? 0, 2); ?></h2>
+        <p style="font-size: 12px; opacity: 0.7;">Total platform/service fees collected.</p>
     </div>
 </div>
 
