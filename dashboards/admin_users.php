@@ -33,18 +33,26 @@ $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY created
         <tbody>
             <?php foreach ($users as $user): ?>
                 <tr style="border-bottom: 1px solid var(--glass-border);">
+                    <td style="padding: 10px; display: flex; align-items: center; gap: 15px;">
+                        <?php
+                        $pp = $user['profile_pic'] ? "../uploads/profile/".$user['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($user['full_name'])."&background=random";
+                        ?>
+                        <img src="<?php echo $pp; ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
+                        <div>
+                            <strong><?php echo htmlspecialchars($user['full_name']); ?></strong><br>
+                            <small><?php echo htmlspecialchars($user['username']); ?> | <?php echo $user['phone']; ?></small>
+                        </div>
+                    </td>
                     <td style="padding: 10px;">
-                        <strong><?php echo htmlspecialchars($user['full_name']); ?></strong><br>
-                        <small><?php echo htmlspecialchars($user['username']); ?> | <?php echo $user['phone']; ?></small>
+                        <?php echo strtoupper($user['role']); ?>
                         <div style="font-size: 10px; margin-top: 5px; opacity: 0.8;">
                             <?php if ($user['bank_name']): ?>
-                                Bank: <?php echo htmlspecialchars($user['bank_name']); ?> (<?php echo htmlspecialchars($user['account_number']); ?>)
+                                Bank: <?php echo htmlspecialchars($user['bank_name']); ?>
                             <?php else: ?>
                                 <span style="color: #ff4d4d;">No Bank Details</span>
                             <?php endif; ?>
                         </div>
                     </td>
-                    <td style="padding: 10px;"><?php echo strtoupper($user['role']); ?></td>
                     <td style="padding: 10px;">
                         <span style="color: <?php echo ($user['kyc_status'] == 'approved') ? '#4dff4d' : (($user['kyc_status'] == 'rejected') ? '#ff4d4d' : '#ffcc00'); ?>">
                             <?php echo strtoupper($user['kyc_status']); ?>

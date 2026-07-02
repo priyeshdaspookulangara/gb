@@ -67,4 +67,16 @@ $recent_transactions = $stmt->fetchAll();
     </table>
 </div>
 
+<script>
+    function updateTime() {
+        const now = new Date();
+        const liveTime = document.getElementById('live-time');
+        if (liveTime) {
+            liveTime.innerText = now.toLocaleTimeString();
+        }
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+</script>
+
 <?php require_once '../layouts/footer.php'; ?>
