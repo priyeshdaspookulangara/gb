@@ -2,9 +2,9 @@
 // config/db.php
 
 $host = 'localhost';
-$db   = 'gold_bullion_system';
-$user = 'root'; // Change as per environment
-$pass = '';     // Change as per environment
+$db   = 'jeoczvkk_gold';
+$user = 'jeoczvkk_jeoczvkk'; // Change as per environment
+$pass = 'pearl$Pearl$';     // Change as per environment
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
