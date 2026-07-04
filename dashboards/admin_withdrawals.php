@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 require_once '../layouts/header.php';
 
-$withdrawals = $pdo->query("SELECT w.*, u.username, u.bank_name, u.account_number
+$withdrawals = $pdo->query("SELECT w.*, u.username, u.full_name, u.profile_pic, u.bank_name, u.account_number
                             FROM withdrawals w
                             JOIN users u ON w.user_id = u.id
                             ORDER BY w.created_at DESC")->fetchAll();
@@ -73,8 +73,13 @@ $withdrawals = $pdo->query("SELECT w.*, u.username, u.bank_name, u.account_numbe
             <?php foreach ($withdrawals as $w): ?>
                 <tr style="border-bottom: 1px solid var(--glass-border);">
                     <td style="padding: 10px;">
-                        <strong>@<?php echo htmlspecialchars($w['username']); ?></strong><br>
-                        <small><?php echo htmlspecialchars($w['bank_name']); ?> (<?php echo htmlspecialchars($w['account_number']); ?>)</small>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="<?php echo get_profile_pic_url($w['profile_pic'], $w['full_name']); ?>" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
+                            <div>
+                                <strong>@<?php echo htmlspecialchars($w['username']); ?></strong><br>
+                                <small><?php echo htmlspecialchars($w['bank_name']); ?> (<?php echo htmlspecialchars($w['account_number']); ?>)</small>
+                            </div>
+                        </div>
                     </td>
                     <td style="padding: 10px; text-align: right;" class="gold-text">Rs. <?php echo number_format($w['amount'], 2); ?></td>
                     <td style="padding: 10px;">

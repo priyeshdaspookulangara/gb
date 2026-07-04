@@ -83,7 +83,7 @@ require_once '../layouts/header.php';
             <div style="text-align: center; flex: 0 0 200px;">
                 <div style="position: relative; display: inline-block;">
                     <?php
-                    $pp = $user['profile_pic'] ? "../uploads/profile/".$user['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($user['full_name'])."&background=C20067&color=fff";
+                    $pp = get_profile_pic_url($user['profile_pic'], $user['full_name']);
                     ?>
                     <img id="pp-preview" src="<?php echo $pp; ?>" style="width: 180px; height: 180px; border-radius: 20px; object-fit: cover; border: 2px solid var(--brand-gold-pure); box-shadow: var(--state-glow);">
                     <div style="margin-top: 15px;">

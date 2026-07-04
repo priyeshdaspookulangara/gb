@@ -40,8 +40,8 @@ $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY created
                     <tr>
                         <td>
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                <?php $pp = $user['profile_pic'] ? "../uploads/profile/".$user['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($user['full_name'])."&background=random"; ?>
-                                <img src="<?php echo $pp; ?>" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">
+                                <?php $pp = get_profile_pic_url($user['profile_pic'], $user['full_name']); ?>
+                                <img src="<?php echo $pp; ?>" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
                                 <div>
                                     <div style="font-weight: 600;"><?php echo htmlspecialchars($user['full_name']); ?></div>
                                     <div style="font-size: 12px; color: var(--text-muted);">@<?php echo htmlspecialchars($user['username']); ?></div>

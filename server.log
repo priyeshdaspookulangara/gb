@@ -25,3 +25,27 @@
 [Sat Jul  4 11:00:54 2026] [::1]:58922 Accepted
 [Sat Jul  4 11:00:54 2026] [::1]:58922 [200]: GET /assets/css/theme.css
 [Sat Jul  4 11:00:54 2026] [::1]:58922 Closing
+[Sat Jul  4 15:27:15 2026] [::1]:58114 Accepted
+[Sat Jul  4 15:27:15 2026] PHP Notice:  session_start(): Ignoring session_start() because a session is already active (started from /app/dashboards/ui_preview.php on line 3) in /app/auth/auth_helper.php on line 3
+[Sat Jul  4 15:27:15 2026] [::1]:58114 [200]: GET /dashboards/ui_preview.php
+[Sat Jul  4 15:27:15 2026] [::1]:58114 Closing
+[Sat Jul  4 15:27:15 2026] [::1]:58130 Accepted
+[Sat Jul  4 15:27:15 2026] [::1]:58130 [200]: GET /assets/css/theme.css
+[Sat Jul  4 15:27:15 2026] [::1]:58130 Closing
+[Sat Jul  4 15:31:35 2026] [::1]:53560 Accepted
+[Sat Jul  4 15:31:35 2026] PHP Notice:  session_start(): Ignoring session_start() because a session is already active (started from /app/dashboards/ui_preview.php on line 3) in /app/auth/auth_helper.php on line 3
+[Sat Jul  4 15:31:35 2026] [::1]:53560 [200]: GET /dashboards/ui_preview.php
+[Sat Jul  4 15:31:35 2026] [::1]:53560 Closing
+[Sat Jul  4 15:31:35 2026] [::1]:53562 Accepted
+[Sat Jul  4 15:31:35 2026] [::1]:53566 Accepted
+[Sat Jul  4 15:31:35 2026] [::1]:53562 [200]: GET /assets/css/theme.css
+[Sat Jul  4 15:31:35 2026] [::1]:53566 [200]: GET /uploads/profile/preview_pp.jpg
+[Sat Jul  4 15:31:35 2026] [::1]:53566 Closing
+[Sat Jul  4 15:31:35 2026] [::1]:53562 Closing
+[Sat Jul  4 15:39:44 2026] [::1]:34286 Accepted
+[Sat Jul  4 15:39:44 2026] PHP Notice:  session_start(): Ignoring session_start() because a session is already active (started from /app/dashboards/ui_preview.php on line 3) in /app/auth/auth_helper.php on line 3
+[Sat Jul  4 15:39:44 2026] [::1]:34286 [200]: GET /dashboards/ui_preview.php
+[Sat Jul  4 15:39:44 2026] [::1]:34286 Closing
+[Sat Jul  4 15:39:44 2026] [::1]:34292 Accepted
+[Sat Jul  4 15:39:44 2026] [::1]:34292 [200]: GET /assets/css/theme.css
+[Sat Jul  4 15:39:44 2026] [::1]:34292 Closing

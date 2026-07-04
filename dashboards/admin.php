@@ -11,7 +11,7 @@ $total_revenue = $pdo->query("SELECT SUM(amount) FROM bookings WHERE status = 'a
 $pending_kyc = $pdo->query("SELECT COUNT(*) FROM users WHERE kyc_status = 'pending'")->fetchColumn();
 
 // Recent Transactions
-$stmt = $pdo->query("SELECT t.*, u.username FROM transactions t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC LIMIT 5");
+$stmt = $pdo->query("SELECT t.*, u.username, u.full_name, u.profile_pic FROM transactions t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC LIMIT 5");
 $recent_transactions = $stmt->fetchAll();
 ?>
 
@@ -85,7 +85,12 @@ $recent_transactions = $stmt->fetchAll();
             <tbody>
                 <?php foreach ($recent_transactions as $tx): ?>
                     <tr>
-                        <td><strong><?php echo htmlspecialchars($tx['username']); ?></strong></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <img src="<?php echo get_profile_pic_url($tx['profile_pic'], $tx['full_name']); ?>" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
+                                <strong><?php echo htmlspecialchars($tx['username']); ?></strong>
+                            </div>
+                        </td>
                         <td><span class="status pending" style="background:#f1f5f9; color: #475569;"><?php echo str_replace('_', ' ', strtoupper($tx['type'])); ?></span></td>
                         <td class="text-muted">Rs. <?php echo number_format($tx['amount'] + $tx['tds_amount'] + $tx['service_charge'], 2); ?></td>
                         <td><strong class="text-success">Rs. <?php echo number_format($tx['amount'], 2); ?></strong></td>

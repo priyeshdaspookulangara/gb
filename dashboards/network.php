@@ -7,7 +7,7 @@ require_role('promoter');
 $user_id = $_SESSION['user_id'];
 
 // Get Downline (1 level for simple list)
-$stmt = $pdo->prepare("SELECT u.username, u.full_name, u.role, u.`rank`, u.created_at, s.team_sales
+$stmt = $pdo->prepare("SELECT u.username, u.full_name, u.role, u.`rank`, u.created_at, u.profile_pic, s.team_sales
                        FROM users u
                        LEFT JOIN sales_stats s ON u.id = s.user_id
                        WHERE u.sponsor_id = ?");
@@ -57,7 +57,12 @@ $full_tree = get_tree($pdo, $user_id, 3); // Limiting to 3 levels for visual san
             <?php else: ?>
                 <?php foreach ($downline as $member): ?>
                     <tr style="border-bottom: 1px solid var(--glass-border);">
-                        <td style="padding: 10px;"><?php echo htmlspecialchars($member['username']); ?></td>
+                        <td style="padding: 10px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <img src="<?php echo get_profile_pic_url($member['profile_pic'], $member['full_name']); ?>" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
+                                @<?php echo htmlspecialchars($member['username']); ?>
+                            </div>
+                        </td>
                         <td style="padding: 10px;"><?php echo htmlspecialchars($member['full_name']); ?></td>
                         <td style="padding: 10px;"><?php echo strtoupper($member['role']); ?></td>
                         <td style="padding: 10px;"><?php echo $member['rank']; ?></td>
@@ -74,7 +79,7 @@ $full_tree = get_tree($pdo, $user_id, 3); // Limiting to 3 levels for visual san
     <div class="tree-container">
         <?php
         function render_tree_node($member) {
-            $pp = $member['profile_pic'] ? "../uploads/profile/".$member['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($member['full_name'])."&background=random";
+            $pp = get_profile_pic_url($member['profile_pic'], $member['full_name']);
             echo '<div class="tree-node">';
             echo '<div class="node-card">';
             echo '<img src="'.$pp.'" style="width: 30px; height: 30px; border-radius: 50%; margin-bottom: 5px; border: 1px solid var(--glass-border);">';
@@ -106,9 +111,9 @@ $full_tree = get_tree($pdo, $user_id, 3); // Limiting to 3 levels for visual san
         <div class="tree-node">
             <div class="node-card" style="border-color: var(--brand-gold-pure); border-width: 2px;">
                 <?php
-                $me_pp = (isset($_SESSION['profile_pic']) && $_SESSION['profile_pic']) ? "../uploads/profile/".$_SESSION['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($_SESSION['full_name'])."&background=random";
+                $me_pp = get_profile_pic_url($_SESSION['profile_pic'] ?? null, $_SESSION['full_name'] ?? 'User');
                 ?>
-                <img src="<?php echo $me_pp; ?>" style="width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--brand-gold-pure); margin-bottom: 5px;">
+                <img src="<?php echo $me_pp; ?>" style="width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--brand-gold-pure); margin-bottom: 5px; object-fit: cover;">
                 <br><strong>ME</strong><br>
                 <small><?php echo $_SESSION['username']; ?></small>
             </div>

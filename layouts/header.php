@@ -25,7 +25,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
         <div class="sidebar-user">
             <?php
-            $header_pp = (isset($_SESSION['profile_pic']) && $_SESSION['profile_pic']) ? "../uploads/profile/".$_SESSION['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($_SESSION['full_name'])."&background=C20067&color=fff";
+            $header_pp = get_profile_pic_url($_SESSION['profile_pic'] ?? null, $_SESSION['full_name'] ?? 'User');
             ?>
             <div style="position: relative;">
                 <img src="<?php echo $header_pp; ?>" style="width: 42px; height: 42px; border-radius: 10px; object-fit: cover; border: 1px solid var(--glass-border);">
@@ -109,8 +109,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <span style="position: absolute; top: -5px; right: -5px; background: var(--brand-magenta); width: 8px; height: 8px; border-radius: 50%;"></span>
                 </div>
                 <a href="profile.php" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: white;">
-                    <img src="<?php echo $header_pp; ?>" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-                    <span><?php echo explode(' ', $_SESSION['full_name'])[0]; ?></span>
+                    <img src="<?php echo $header_pp; ?>" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
+                    <span><?php echo explode(' ', $_SESSION['full_name'] ?? 'User')[0]; ?></span>
                 </a>
             </div>
         </nav>

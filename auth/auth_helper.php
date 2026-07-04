@@ -38,6 +38,13 @@ function logout_user() {
     exit();
 }
 
+function get_profile_pic_url($profile_pic, $full_name, $base_path = "../") {
+    if ($profile_pic && file_exists(__DIR__ . '/../uploads/profile/' . $profile_pic)) {
+        return $base_path . "uploads/profile/" . $profile_pic;
+    }
+    return "https://ui-avatars.com/api/?name=" . urlencode($full_name) . "&background=C20067&color=fff";
+}
+
 /**
  * CSRF Protection
  */
