@@ -48,9 +48,9 @@ $sales_trend = $pdo->query("SELECT DATE(created_at) as date, COUNT(*) as count, 
 </div>
 
 <div class="dashboard-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding:0;">
-    <div class="card">
-        <div class="card-header bg-white">
-            <h4 class="m-0">Incentive Distribution</h4>
+    <div class="glass-card">
+        <div class="card-header">
+            <h4 class="m-0 gold-text">Incentive Distribution</h4>
         </div>
         <div class="table-responsive">
             <table>
@@ -72,9 +72,9 @@ $sales_trend = $pdo->query("SELECT DATE(created_at) as date, COUNT(*) as count, 
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header bg-white">
-            <h4 class="m-0">Sales Trend (7 Days)</h4>
+    <div class="glass-card">
+        <div class="card-header">
+            <h4 class="m-0 gold-text">Sales Trend (7 Days)</h4>
         </div>
         <div class="table-responsive">
             <table>

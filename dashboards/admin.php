@@ -49,9 +49,9 @@ $recent_transactions = $stmt->fetchAll();
 
 <div class="row">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h4 class="m-0">System Actions</h4>
+        <div class="glass-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="m-0 gold-text">System Actions</h4>
             </div>
             <div class="card-body">
                 <?php if (isset($_GET['success'])): ?>
@@ -59,17 +59,17 @@ $recent_transactions = $stmt->fetchAll();
                 <?php endif; ?>
                 <form method="POST" action="process_salaries.php" class="d-flex align-items-center gap-3">
                     <?php csrf_input(); ?>
-                    <button type="submit" class="btn-primary">Process Monthly Salaries</button>
-                    <small class="text-muted">Distribute rank incentives to all qualified promoters for the current month.</small>
+                    <button type="submit" class="btn-gold">Process Monthly Salaries</button>
+                    <small class="text-muted" style="margin-left: 15px;">Distribute rank incentives to all qualified promoters for the current month.</small>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header bg-white">
-        <h4 class="m-0">Recent Activity</h4>
+<div class="glass-card">
+    <div class="card-header">
+        <h4 class="m-0 gold-text">Recent Activity</h4>
     </div>
     <div class="table-responsive">
         <table>

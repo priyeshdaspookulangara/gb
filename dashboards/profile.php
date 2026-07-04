@@ -69,22 +69,51 @@ $user = $stmt->fetch();
 require_once '../layouts/header.php';
 ?>
 
-<div class="glass-card" style="max-width: 600px; margin: 0 auto;">
-    <h2 class="gold-gradient-text">My Profile</h2>
-    <p>Update your personal information and security settings.</p>
+<div class="glass-card" style="max-width: 900px; margin: 0 auto;">
+    <h2 class="gold-gradient-text">Account Profile & Settings</h2>
+    <p class="text-muted">Manage your personal information and financial destination details.</p>
 
-    <?php if ($message): ?><p style="color: #4dff4d; margin-top: 15px;"><?php echo $message; ?></p><?php endif; ?>
-    <?php if ($error): ?><p style="color: #ff4d4d; margin-top: 15px;"><?php echo $error; ?></p><?php endif; ?>
+    <?php if ($message): ?><p class="status approved" style="margin-top: 20px;"><?php echo $message; ?></p><?php endif; ?>
+    <?php if ($error): ?><p class="status rejected" style="margin-top: 20px;"><?php echo $error; ?></p><?php endif; ?>
 
-    <form method="POST" enctype="multipart/form-data" style="margin-top: 25px;">
+    <form method="POST" enctype="multipart/form-data" style="margin-top: 40px;">
         <?php csrf_input(); ?>
+        <div style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
+            <!-- Profile Pic Section -->
+            <div style="text-align: center; flex: 0 0 200px;">
+                <div style="position: relative; display: inline-block;">
+                    <?php
+                    $pp = $user['profile_pic'] ? "../uploads/profile/".$user['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($user['full_name'])."&background=C20067&color=fff";
+                    ?>
+                    <img id="pp-preview" src="<?php echo $pp; ?>" style="width: 180px; height: 180px; border-radius: 20px; object-fit: cover; border: 2px solid var(--brand-gold-pure); box-shadow: var(--state-glow);">
+                    <div style="margin-top: 15px;">
+                        <label class="btn-primary" style="font-size: 11px; cursor: pointer; padding: 8px 15px;">
+                            Change Photo
+                            <input type="file" name="profile_pic" id="pp-input" onchange="previewPP(this)" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+            </div>
 
-        <div style="text-align: center; margin-bottom: 25px;">
-            <?php
-            $pp = $user['profile_pic'] ? "../uploads/profile/".$user['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($user['full_name'])."&background=random";
-            ?>
-            <img id="pp-preview" src="<?php echo $pp; ?>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--brand-gold-pure); margin-bottom: 10px;">
-            <input type="file" name="profile_pic" id="pp-input" onchange="previewPP(this)" style="display: block; margin: 10px auto; font-size: 12px; color: #ccc;">
+            <!-- Basic Info Fields -->
+            <div style="flex: 1; min-width: 300px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group">
+                    <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Full Name</label>
+                    <input type="text" name="full_name" value="<?php echo htmlspecialchars($user['full_name']); ?>" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Email Address</label>
+                    <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Phone Number</label>
+                    <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Security (New Password)</label>
+                    <input type="password" name="new_password" class="form-control" placeholder="••••••••">
+                </div>
+            </div>
         </div>
 
         <script>
@@ -99,79 +128,37 @@ require_once '../layouts/header.php';
             }
         </script>
 
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-size: 14px; margin-bottom: 5px;">Full Name</label>
-            <input type="text" name="full_name" value="<?php echo htmlspecialchars($user['full_name']); ?>" required
-                   style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-size: 14px; margin-bottom: 5px;">Email Address</label>
-            <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required
-                   style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-size: 14px; margin-bottom: 5px;">Phone Number</label>
-            <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>" required
-                   style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 25px 0;">
-
-        <h3 class="gold-text" style="font-size: 18px; margin-bottom: 15px;">Change Password</h3>
-        <p style="font-size: 12px; opacity: 0.7; margin-bottom: 15px;">Leave blank if you don't want to change it.</p>
-
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-size: 14px; margin-bottom: 5px;">New Password</label>
-            <input type="password" name="new_password"
-                   style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
-        </div>
-
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-size: 14px; margin-bottom: 5px;">Confirm New Password</label>
-            <input type="password" name="confirm_password"
-                   style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 25px 0;">
-
-        <h3 class="gold-text" style="font-size: 18px; margin-bottom: 15px;">Bank Details</h3>
-        <p style="font-size: 12px; opacity: 0.7; margin-bottom: 15px;">Required for withdrawing your earnings.</p>
-
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-size: 14px; margin-bottom: 5px;">Bank Name</label>
-            <input type="text" name="bank_name" value="<?php echo htmlspecialchars($user['bank_name'] ?? ''); ?>"
-                   style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-            <div>
-                <label style="display: block; font-size: 14px; margin-bottom: 5px;">Account Holder</label>
-                <input type="text" name="account_holder" value="<?php echo htmlspecialchars($user['account_holder'] ?? ''); ?>"
-                       style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
-            </div>
-            <div>
-                <label style="display: block; font-size: 14px; margin-bottom: 5px;">Account Number</label>
-                <input type="text" name="account_number" value="<?php echo htmlspecialchars($user['account_number'] ?? ''); ?>"
-                       style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
+        <div style="margin-top: 50px; padding: 30px; border-radius: 15px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);">
+            <h3 class="gold-text" style="margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-university"></i> Banking & Payout Details
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div class="form-group">
+                    <label style="color: var(--text-muted); font-size: 11px;">Bank Name</label>
+                    <input type="text" name="bank_name" value="<?php echo htmlspecialchars($user['bank_name'] ?? ''); ?>" class="form-control" placeholder="e.g. HDFC Bank">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-muted); font-size: 11px;">Account Holder</label>
+                    <input type="text" name="account_holder" value="<?php echo htmlspecialchars($user['account_holder'] ?? ''); ?>" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-muted); font-size: 11px;">Account Number</label>
+                    <input type="text" name="account_number" value="<?php echo htmlspecialchars($user['account_number'] ?? ''); ?>" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label style="color: var(--text-muted); font-size: 11px;">IFSC Code</label>
+                    <input type="text" name="ifsc_code" value="<?php echo htmlspecialchars($user['ifsc_code'] ?? ''); ?>" class="form-control" placeholder="e.g. HDFC0001234">
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label style="color: var(--text-muted); font-size: 11px;">Branch Name</label>
+                    <input type="text" name="branch_name" value="<?php echo htmlspecialchars($user['branch_name'] ?? ''); ?>" class="form-control">
+                </div>
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-            <div>
-                <label style="display: block; font-size: 14px; margin-bottom: 5px;">IFSC Code</label>
-                <input type="text" name="ifsc_code" value="<?php echo htmlspecialchars($user['ifsc_code'] ?? ''); ?>"
-                       style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
-            </div>
-            <div>
-                <label style="display: block; font-size: 14px; margin-bottom: 5px;">Branch Name</label>
-                <input type="text" name="branch_name" value="<?php echo htmlspecialchars($user['branch_name'] ?? ''); ?>"
-                       style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px;">
-            </div>
-        </div>
-
-        <button type="submit" class="btn-gold" style="width: 100%; margin-top: 20px;">Save Profile Changes</button>
+        <button type="submit" class="btn-gold" style="width: 100%; margin-top: 40px; padding: 18px; font-size: 16px;">
+            <i class="fas fa-save" style="margin-right: 10px;"></i> Save Profile Changes
+        </button>
     </form>
 </div>
 

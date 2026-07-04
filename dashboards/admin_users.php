@@ -17,9 +17,9 @@ require_once '../layouts/header.php';
 $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY created_at DESC")->fetchAll();
 ?>
 
-<div class="card">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-        <h4 class="m-0">User Directory</h4>
+<div class="glass-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="m-0 gold-text">User Directory</h4>
         <div class="filter-group">
             <input type="text" class="form-control" placeholder="Search members..." style="width: 200px;">
         </div>

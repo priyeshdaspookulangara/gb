@@ -45,28 +45,33 @@ require_once '../layouts/header.php';
 
 <div class="row">
     <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h4 class="m-0">Withdraw Funds</h4>
+        <div class="glass-card">
+            <div class="card-header">
+                <h4 class="m-0 gold-text">Secure Payout</h4>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="padding: 10px 0;">
                 <?php if ($data['kyc_status'] !== 'approved'): ?>
-                    <div class="status pending" style="margin-bottom: 20px;">KYC verification required. <a href="kyc.php" class="gold-text">Verify now</a>.</div>
-                    <button class="btn-primary" style="width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>Request Payout</button>
+                    <div class="status pending" style="margin-bottom: 20px; text-align: center; display: block;">KYC Required</div>
+                    <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">Please complete your <a href="kyc.php" class="gold-text">identity verification</a> to enable withdrawals.</p>
+                    <button class="btn-gold" style="width: 100%; opacity: 0.3; cursor: not-allowed;" disabled>Withdraw Funds</button>
                 <?php elseif (!$data['bank_name']): ?>
-                    <div class="status rejected" style="margin-bottom: 20px;">Bank details missing. <a href="profile.php" class="gold-text">Update now</a>.</div>
-                    <button class="btn-primary" style="width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>Request Payout</button>
+                    <div class="status rejected" style="margin-bottom: 20px; text-align: center; display: block;">Missing Bank Info</div>
+                    <p style="font-size: 12px; text-align: center; margin-bottom: 20px;">Update your <a href="profile.php" class="gold-text">bank details</a> in your profile first.</p>
+                    <button class="btn-gold" style="width: 100%; opacity: 0.3; cursor: not-allowed;" disabled>Withdraw Funds</button>
                 <?php else: ?>
-                    <p class="text-muted" style="font-size: 13px; margin-bottom: 20px;">Funds will be sent to: <br><strong><?php echo htmlspecialchars($data['bank_name']); ?></strong></p>
-                    <a href="request_withdrawal.php" class="btn-primary" style="width: 100%; text-align: center;">Request Payout</a>
+                    <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
+                        <small style="color: var(--text-muted); text-transform: uppercase; font-size: 10px; display: block; margin-bottom: 5px;">Linked Account</small>
+                        <strong style="color: white; font-size: 14px;"><?php echo htmlspecialchars($data['bank_name']); ?></strong>
+                    </div>
+                    <a href="request_withdrawal.php" class="btn-gold" style="width: 100%; text-align: center;">Initiate Withdrawal</a>
                 <?php endif; ?>
             </div>
         </div>
     </div>
     <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h4 class="m-0">Recent Transactions</h4>
+        <div class="glass-card">
+            <div class="card-header">
+                <h4 class="m-0 gold-text">Financial Ledger</h4>
             </div>
             <div class="table-responsive">
                 <table>

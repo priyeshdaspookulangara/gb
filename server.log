@@ -1,0 +1,14 @@
+[Sat Jul  4 09:04:31 2026] PHP 8.3.6 Development Server (http://localhost:8080) started
+[Sat Jul  4 09:04:33 2026] [::1]:37988 Accepted
+[Sat Jul  4 09:04:33 2026] [::1]:37988 [200]: HEAD /login.php
+[Sat Jul  4 09:04:33 2026] [::1]:37988 Closing
+[Sat Jul  4 09:06:31 2026] [::1]:51752 Accepted
+[Sat Jul  4 09:06:31 2026] [::1]:51752 [200]: GET /login.php
+[Sat Jul  4 09:06:31 2026] [::1]:51752 Closing
+[Sat Jul  4 09:06:32 2026] [::1]:51758 Accepted
+[Sat Jul  4 09:06:32 2026] PHP Notice:  session_start(): Ignoring session_start() because a session is already active (started from /app/dashboards/ui_preview.php on line 3) in /app/auth/auth_helper.php on line 3
+[Sat Jul  4 09:06:32 2026] [::1]:51758 [200]: GET /dashboards/ui_preview.php
+[Sat Jul  4 09:06:32 2026] [::1]:51758 Closing
+[Sat Jul  4 09:06:32 2026] [::1]:51764 Accepted
+[Sat Jul  4 09:06:32 2026] [::1]:51764 [200]: GET /assets/css/theme.css
+[Sat Jul  4 09:06:32 2026] [::1]:51764 Closing

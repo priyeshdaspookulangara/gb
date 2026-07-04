@@ -51,9 +51,9 @@ $referral_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "http
 
 <div class="row">
     <div class="col-lg-7">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h4 class="m-0">Income Breakdown</h4>
+        <div class="glass-card">
+            <div class="card-header">
+                <h4 class="m-0 gold-text">Income Breakdown</h4>
             </div>
             <div class="table-responsive">
                 <table>
@@ -80,9 +80,9 @@ $referral_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "http
         </div>
     </div>
     <div class="col-lg-5">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h4 class="m-0">Referral Link</h4>
+        <div class="glass-card">
+            <div class="card-header">
+                <h4 class="m-0 gold-text">Referral Link</h4>
             </div>
             <div class="card-body">
                 <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Share this link to grow your network and earn commissions.</p>

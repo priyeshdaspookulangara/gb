@@ -83,25 +83,25 @@ if ($booking && $booking['status'] === 'active') {
             $m2_percent = ($m2_month / $total_months) * 100;
             ?>
 
-            <div style="height: 12px; background: #e2e8f0; border-radius: 6px; position: relative; margin: 50px 0;">
-                <div style="height: 100%; width: <?php echo $progress_percent; ?>%; background: var(--brand-magenta); border-radius: 6px; transition: width 1s;"></div>
+            <div class="progress-container" style="margin: 60px 0;">
+                <div class="progress-fill" style="width: <?php echo $progress_percent; ?>%;"></div>
 
                 <!-- Milestone 1 -->
-                <div style="position: absolute; left: <?php echo $m1_percent; ?>%; top: -35px; transform: translateX(-50%); text-align: center;">
-                    <div style="width: 14px; height: 14px; background: <?php echo ($days_passed >= $m1_month * 30) ? 'var(--brand-magenta)' : '#cbd5e1'; ?>; border-radius: 50%; margin: 10px auto; border: 2px solid white;"></div>
-                    <span style="font-size: 11px; font-weight: 600;"><?php echo $m1_month; ?>M (₹<?php echo number_format($m1_amount/1000); ?>k)</span>
+                <div class="milestone-badge" style="left: <?php echo $m1_percent; ?>%;">
+                    <div class="milestone-node <?php echo ($days_passed >= $m1_month * 30) ? 'unlocked' : ''; ?>" style="left: 50%;"></div>
+                    <span style="display: block; margin-top: 25px; font-weight: 600;"><?php echo $m1_month; ?>M<br>₹<?php echo number_format($m1_amount/1000); ?>k</span>
                 </div>
 
                 <!-- Milestone 2 -->
-                <div style="position: absolute; left: <?php echo $m2_percent; ?>%; top: -35px; transform: translateX(-50%); text-align: center;">
-                    <div style="width: 14px; height: 14px; background: <?php echo ($days_passed >= $m2_month * 30) ? 'var(--brand-magenta)' : '#cbd5e1'; ?>; border-radius: 50%; margin: 10px auto; border: 2px solid white;"></div>
-                    <span style="font-size: 11px; font-weight: 600;"><?php echo $m2_month; ?>M (₹<?php echo number_format($m2_amount/1000); ?>k)</span>
+                <div class="milestone-badge" style="left: <?php echo $m2_percent; ?>%;">
+                    <div class="milestone-node <?php echo ($days_passed >= $m2_month * 30) ? 'unlocked' : ''; ?>" style="left: 50%;"></div>
+                    <span style="display: block; margin-top: 25px; font-weight: 600;"><?php echo $m2_month; ?>M<br>₹<?php echo number_format($m2_amount/1000); ?>k</span>
                 </div>
 
                 <!-- Final -->
-                <div style="position: absolute; left: 100%; top: -35px; transform: translateX(-50%); text-align: center;">
-                    <div style="width: 14px; height: 14px; background: <?php echo ($days_passed >= $total_months * 30) ? 'var(--brand-magenta)' : '#cbd5e1'; ?>; border-radius: 50%; margin: 10px auto; border: 2px solid white;"></div>
-                    <span style="font-size: 11px; font-weight: 600;"><?php echo $total_months; ?>M (₹<?php echo number_format($total_maturity/1000); ?>k)</span>
+                <div class="milestone-badge" style="left: 100%;">
+                    <div class="milestone-node <?php echo ($days_passed >= $total_months * 30) ? 'unlocked' : ''; ?>" style="left: 50%;"></div>
+                    <span style="display: block; margin-top: 25px; font-weight: 600;"><?php echo $total_months; ?>M<br>₹<?php echo number_format($total_maturity/1000); ?>k</span>
                 </div>
             </div>
 

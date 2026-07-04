@@ -11,9 +11,9 @@ $error = $_GET['error'] ?? '';
 $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1")->fetchAll();
 ?>
 
-<div class="glass-card" style="max-width: 600px; margin: 0 auto;">
+<div class="glass-card" style="max-width: 800px; margin: 0 auto;">
     <h2 class="gold-gradient-text">Gold Advance Booking</h2>
-    <p>Deposit Rs. 36,000 to start your 11-month gold maturation journey.</p>
+    <p class="text-muted">Start your 11-month gold maturation journey with a premium bullion booking.</p>
 
     <?php if ($message): ?>
         <p style="margin-top: 20px; color: #4dff4d;"><?php echo htmlspecialchars($message); ?></p>
@@ -23,21 +23,38 @@ $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1")->fetchA
     <?php endif; ?>
 
     <?php if (!$message): ?>
-        <div style="margin-top: 30px;">
-            <h3 class="gold-text" style="font-size: 18px; margin-bottom: 20px;">Step 1: Select a Gold Scheme</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <div style="margin-top: 40px;">
+            <h3 class="gold-text" style="font-size: 20px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+                <span style="background: var(--brand-magenta); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">1</span>
+                Select a Gold Scheme
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
                 <?php foreach ($schemes as $s): ?>
                     <div class="glass-card scheme-card" onclick="selectScheme(<?php echo $s['id']; ?>, '<?php echo $s['scheme_name']; ?>', <?php echo $s['deposit_amount']; ?>)"
-                         style="cursor: pointer; transition: transform 0.3s; border-color: rgba(255,255,255,0.1);">
+                         style="cursor: pointer; transition: all 0.3s; border: 1px solid var(--glass-border); padding: 0; overflow: hidden; margin-bottom: 0;">
                         <?php if ($s['scheme_image']): ?>
-                            <img src="../uploads/schemes/<?php echo $s['scheme_image']; ?>" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+                            <img src="../uploads/schemes/<?php echo $s['scheme_image']; ?>" style="width: 100%; height: 160px; object-fit: cover;">
+                        <?php else: ?>
+                            <div style="width: 100%; height: 160px; background: linear-gradient(45deg, #16000D, #30001a); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-coins" style="font-size: 40px; color: var(--brand-gold-pure); opacity: 0.3;"></i>
+                            </div>
                         <?php endif; ?>
-                        <h4 class="gold-text"><?php echo $s['scheme_name']; ?></h4>
-                        <p style="font-size: 12px; margin: 10px 0;"><?php echo $s['description']; ?></p>
-                        <p>Deposit: <strong>Rs. <?php echo number_format($s['deposit_amount']); ?></strong></p>
-                        <p>Duration: <strong><?php echo $s['duration_months']; ?> Months</strong></p>
-                        <div class="radio-select" style="margin-top: 15px; text-align: center;">
-                            <span class="btn-gold" style="padding: 5px 15px; font-size: 12px;">Select</span>
+                        <div style="padding: 20px;">
+                            <h4 class="gold-text" style="font-size: 18px; margin-bottom: 10px;"><?php echo $s['scheme_name']; ?></h4>
+                            <p style="font-size: 12px; color: var(--text-muted); height: 40px; overflow: hidden; margin-bottom: 15px;"><?php echo $s['description']; ?></p>
+
+                            <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--glass-border); padding-top: 15px;">
+                                <div>
+                                    <small style="color: var(--text-muted); display: block; text-transform: uppercase; font-size: 9px;">Deposit</small>
+                                    <strong style="color: white;">₹<?php echo number_format($s['deposit_amount']); ?></strong>
+                                </div>
+                                <div style="text-align: right;">
+                                    <small style="color: var(--text-muted); display: block; text-transform: uppercase; font-size: 9px;">Term</small>
+                                    <strong style="color: white;"><?php echo $s['duration_months']; ?> Months</strong>
+                                </div>
+                            </div>
+
+                            <button class="btn-gold" style="width: 100%; margin-top: 20px; font-size: 12px; padding: 10px;">Select Plan</button>
                         </div>
                     </div>
                 <?php endforeach; ?>

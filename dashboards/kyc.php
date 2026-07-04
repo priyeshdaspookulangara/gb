@@ -59,42 +59,42 @@ $user = $stmt->fetch();
 require_once '../layouts/header.php';
 ?>
 
-<div class="glass-card" style="max-width: 600px; margin: 0 auto;">
-    <h2 class="gold-gradient-text">KYC Verification</h2>
-    <p>Upload your scanned documents for account verification.</p>
+<div class="glass-card" style="max-width: 700px; margin: 0 auto;">
+    <h2 class="gold-gradient-text">Identity Verification (KYC)</h2>
+    <p>Upload your government-issued documents to unlock full portal features and withdrawals.</p>
 
-    <div style="margin: 20px 0; padding: 15px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">
-        <strong>Status: </strong>
-        <span style="color: <?php echo ($user['kyc_status'] == 'approved') ? '#4dff4d' : (($user['kyc_status'] == 'rejected') ? '#ff4d4d' : '#ffcc00'); ?>">
-            <?php echo strtoupper($user['kyc_status']); ?>
-        </span>
+    <div style="margin: 25px 0; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);">
+        <h4 class="gold-text" style="display: flex; align-items: center; gap: 15px;">
+            Verification Status:
+            <span class="status <?php echo $user['kyc_status']; ?>"><?php echo strtoupper($user['kyc_status']); ?></span>
+        </h4>
     </div>
 
-    <?php if ($message): ?><p style="color: #4dff4d;"><?php echo $message; ?></p><?php endif; ?>
-    <?php if ($error): ?><p style="color: #ff4d4d;"><?php echo $error; ?></p><?php endif; ?>
+    <?php if ($message): ?><p class="status approved" style="margin: 15px 0;"><?php echo $message; ?></p><?php endif; ?>
+    <?php if ($error): ?><p class="status rejected" style="margin: 15px 0;"><?php echo $error; ?></p><?php endif; ?>
 
-    <form method="POST" enctype="multipart/form-data" style="margin-top: 25px;">
+    <form method="POST" enctype="multipart/form-data" style="margin-top: 30px;">
         <?php csrf_input(); ?>
 
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; font-size: 14px; margin-bottom: 8px;">Aadhaar Card (Front/Back)</label>
-            <input type="file" name="aadhaar" required style="color: #ccc;">
-            <?php if ($user['kyc_aadhaar']): ?><p style="font-size: 11px; opacity: 0.6;">Current: <?php echo $user['kyc_aadhaar']; ?></p><?php endif; ?>
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Aadhaar Card / National ID (Front)</label>
+            <input type="file" name="aadhaar" required class="form-control" style="padding: 8px;">
+            <?php if ($user['kyc_aadhaar']): ?><p style="font-size: 11px; opacity: 0.5; margin-top: 5px;">Currently on file: <?php echo $user['kyc_aadhaar']; ?></p><?php endif; ?>
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; font-size: 14px; margin-bottom: 8px;">PAN Card</label>
-            <input type="file" name="pan" required style="color: #ccc;">
-            <?php if ($user['kyc_pan']): ?><p style="font-size: 11px; opacity: 0.6;">Current: <?php echo $user['kyc_pan']; ?></p><?php endif; ?>
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">PAN Card (Front)</label>
+            <input type="file" name="pan" required class="form-control" style="padding: 8px;">
+            <?php if ($user['kyc_pan']): ?><p style="font-size: 11px; opacity: 0.5; margin-top: 5px;">Currently on file: <?php echo $user['kyc_pan']; ?></p><?php endif; ?>
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <label style="display: block; font-size: 14px; margin-bottom: 8px;">Bank Account Front Page (Passbook/Cheque)</label>
-            <input type="file" name="bank" required style="color: #ccc;">
-            <?php if ($user['kyc_bank']): ?><p style="font-size: 11px; opacity: 0.6;">Current: <?php echo $user['kyc_bank']; ?></p><?php endif; ?>
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Bank Account Details (Passbook/Cheque)</label>
+            <input type="file" name="bank" required class="form-control" style="padding: 8px;">
+            <?php if ($user['kyc_bank']): ?><p style="font-size: 11px; opacity: 0.5; margin-top: 5px;">Currently on file: <?php echo $user['kyc_bank']; ?></p><?php endif; ?>
         </div>
 
-        <button type="submit" class="btn-gold" style="width: 100%; margin-top: 10px;">Upload Documents</button>
+        <button type="submit" class="btn-gold" style="width: 100%; margin-top: 10px; font-size: 16px; padding: 15px;">Submit Verification Request</button>
     </form>
 </div>
 

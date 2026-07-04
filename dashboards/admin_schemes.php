@@ -65,65 +65,65 @@ require_once '../layouts/header.php';
     <!-- Create/Update Form -->
     <div class="glass-card">
         <h3 class="gold-text">Add New Scheme</h3>
-        <?php if ($message): ?><p style="color: #4dff4d; font-size: 13px;"><?php echo $message; ?></p><?php endif; ?>
+        <?php if ($message): ?><p class="status approved" style="margin-top: 10px;"><?php echo $message; ?></p><?php endif; ?>
 
         <form method="POST" enctype="multipart/form-data" style="margin-top: 20px;">
             <?php csrf_input(); ?>
             <input type="hidden" name="action" value="create">
 
-            <div style="margin-bottom: 10px;">
-                <label style="font-size: 12px;">Scheme Code</label>
-                <input type="text" name="scheme_code" required style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px; border-radius: 5px;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Scheme Code</label>
+                <input type="text" name="scheme_code" required class="form-control" placeholder="e.g. GS36K">
             </div>
-            <div style="margin-bottom: 10px;">
-                <label style="font-size: 12px;">Scheme Name</label>
-                <input type="text" name="scheme_name" required style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px; border-radius: 5px;">
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                <div>
-                    <label style="font-size: 12px;">Deposit (Rs)</label>
-                    <input type="number" name="deposit_amount" required style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px; border-radius: 5px;">
-                </div>
-                <div>
-                    <label style="font-size: 12px;">Maturity (Rs)</label>
-                    <input type="number" name="maturity_amount" required style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px; border-radius: 5px;">
-                </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Scheme Name</label>
+                <input type="text" name="scheme_name" required class="form-control" placeholder="e.g. Standard 11-Month Plan">
             </div>
 
-            <div style="margin-bottom: 10px;">
-                <label style="font-size: 12px;">Total Duration (Months)</label>
-                <input type="number" name="duration_months" required style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px; border-radius: 5px;">
-            </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
-                    <label style="font-size: 12px;">Milestone 1 (Month)</label>
-                    <input type="number" name="milestone_1_month" value="4" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px; border-radius: 5px;">
+                    <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Deposit (Rs)</label>
+                    <input type="number" name="deposit_amount" required class="form-control">
                 </div>
                 <div>
-                    <label style="font-size: 12px;">M1 Amount (Rs)</label>
-                    <input type="number" name="milestone_1_amount" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px; border-radius: 5px;">
+                    <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Maturity (Rs)</label>
+                    <input type="number" name="maturity_amount" required class="form-control">
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Total Duration (Months)</label>
+                <input type="number" name="duration_months" required class="form-control">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
-                    <label style="font-size: 12px;">Milestone 2 (Month)</label>
-                    <input type="number" name="milestone_2_month" value="8" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px; border-radius: 5px;">
+                    <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Milestone 1 (Month)</label>
+                    <input type="number" name="milestone_1_month" value="4" class="form-control">
                 </div>
                 <div>
-                    <label style="font-size: 12px;">M2 Amount (Rs)</label>
-                    <input type="number" name="milestone_2_amount" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 8px; border-radius: 5px;">
+                    <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">M1 Amount (Rs)</label>
+                    <input type="number" name="milestone_1_amount" class="form-control">
                 </div>
             </div>
 
-            <div style="margin-bottom: 10px;">
-                <label style="font-size: 12px;">Representational Image</label>
-                <input type="file" name="scheme_image" style="width: 100%; font-size: 11px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Milestone 2 (Month)</label>
+                    <input type="number" name="milestone_2_month" value="8" class="form-control">
+                </div>
+                <div>
+                    <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">M2 Amount (Rs)</label>
+                    <input type="number" name="milestone_2_amount" class="form-control">
+                </div>
             </div>
 
-            <button type="submit" class="btn-gold" style="width: 100%; margin-top: 10px;">Create Scheme</button>
+            <div style="margin-bottom: 20px;">
+                <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Representational Image</label>
+                <input type="file" name="scheme_image" style="font-size: 11px;">
+            </div>
+
+            <button type="submit" class="btn-gold" style="width: 100%;">Create Scheme</button>
         </form>
     </div>
 

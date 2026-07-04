@@ -27,10 +27,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <?php
             $header_pp = (isset($_SESSION['profile_pic']) && $_SESSION['profile_pic']) ? "../uploads/profile/".$_SESSION['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($_SESSION['full_name'])."&background=C20067&color=fff";
             ?>
-            <img src="<?php echo $header_pp; ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
-            <div>
-                <div style="font-weight: 600; font-size: 14px;"><?php echo htmlspecialchars($_SESSION['full_name']); ?></div>
-                <div style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;"><?php echo $_SESSION['role']; ?></div>
+            <div style="position: relative;">
+                <img src="<?php echo $header_pp; ?>" style="width: 42px; height: 42px; border-radius: 10px; object-fit: cover; border: 1px solid var(--glass-border);">
+                <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: var(--success-color); border: 2px solid var(--bg-sidebar); border-radius: 50%;"></span>
+            </div>
+            <div style="overflow: hidden;">
+                <div style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo htmlspecialchars($_SESSION['full_name']); ?></div>
+                <div style="font-size: 11px; color: var(--brand-gold-pure); text-transform: uppercase; letter-spacing: 0.5px;"><?php echo $_SESSION['role']; ?></div>
             </div>
         </div>
 
@@ -117,15 +120,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="page-heading">
                 <ul class="breadcrumb">
                     <li><a href="index.php" style="text-decoration: none; color: inherit;">Home</a></li>
-                    <li>/</li>
-                    <li style="color: var(--text-main); font-weight: 500;"><?php echo str_replace('.php', '', ucfirst($current_page)); ?></li>
+                    <li><i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 5px; opacity: 0.5;"></i></li>
+                    <li style="color: var(--brand-gold-pure); font-weight: 500;"><?php
+                        $label = str_replace(['admin_', '_', '.php'], ['', ' ', ''], $current_page);
+                        echo ucfirst($label);
+                    ?></li>
                 </ul>
-                <h1 style="font-size: 28px; font-weight: 700; color: #1e293b; margin-top: 5px;">
+                <h1 class="gold-gradient-text" style="font-size: 32px; margin-top: 10px;">
                     <?php
                         if($current_page == 'admin.php') echo 'Corporate Overview';
                         elseif($current_page == 'promoter.php') echo 'Promoter Dashboard';
                         elseif($current_page == 'customer.php') echo 'Investor Dashboard';
-                        else echo str_replace(['admin_', '_'], ['', ' '], ucfirst(str_replace('.php', '', $current_page)));
+                        else {
+                            $title = str_replace(['admin_', '_', '.php'], ['', ' ', ''], $current_page);
+                            echo ucfirst($title);
+                        }
                     ?>
                 </h1>
             </div>
