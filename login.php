@@ -52,7 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php csrf_input(); ?>
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <div style="text-align: right; margin-top: -5px;">
+            <div style="display: flex; justify-content: space-between; margin-top: -5px;">
+                <a href="gold-plans.php" style="font-size: 12px; color: var(--brand-gold-pure); text-decoration: none;">View Gold Plans</a>
                 <a href="forgot_password.php" style="font-size: 12px; color: var(--state-locked); text-decoration: none;">Forgot Password?</a>
             </div>
             <button type="submit" class="btn-gold" style="width: 100%; margin-top: 20px;">Login</button>

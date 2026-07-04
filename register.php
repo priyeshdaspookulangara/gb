@@ -95,7 +95,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <button type="submit" class="btn-gold" style="width: 100%; margin-top: 20px;">Register</button>
         </form>
-        <p style="margin-top: 20px; font-size: 14px;">Already have an account? <a href="login.php" class="gold-text">Login here</a></p>
+        <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 14px;">
+            <p>Already have an account? <a href="login.php" class="gold-text">Login here</a></p>
+            <a href="gold-plans.php" style="color: var(--brand-gold-pure); text-decoration: none;">View Gold Plans</a>
+        </div>
     </div>
 </body>
 </html>
