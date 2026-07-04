@@ -23,90 +23,80 @@ $sales_trend = $pdo->query("SELECT DATE(created_at) as date, COUNT(*) as count, 
                             LIMIT 7")->fetchAll();
 ?>
 
-<div class="glass-card">
-    <h2 class="gold-gradient-text">Financial Reports</h2>
-    <p>Comprehensive overview of system revenue, liabilities, and incentive payouts.</p>
-</div>
-
-<div class="dashboard-grid" style="margin-top: 24px;">
-    <!-- Revenue Widget -->
-    <div class="glass-card">
-        <h4 class="gold-text">Gross Revenue</h4>
-        <h2 style="font-size: 32px;">Rs. <?php echo number_format($revenue ?? 0, 2); ?></h2>
-        <p style="font-size: 12px; opacity: 0.7;">Total from active bullion card bookings.</p>
+<div class="card-group-row">
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-sack-dollar"></i></div>
+        <div class="stat-content">
+            <h3>Gross Revenue</h3>
+            <p>Rs. <?php echo number_format($revenue ?? 0); ?></p>
+        </div>
     </div>
-
-    <!-- Liabilities Widget -->
-    <div class="glass-card">
-        <h4 class="gold-text">Total Maturation Liabilities</h4>
-        <h2 style="font-size: 32px; color: #ff4d4d;">Rs. <?php echo number_format($liabilities ?? 0, 2); ?></h2>
-        <p style="font-size: 12px; opacity: 0.7;">Potential gold value owed at 11-month maturity.</p>
+    <div class="card card-body stat-card">
+        <div class="stat-icon text-danger"><i class="fas fa-triangle-exclamation"></i></div>
+        <div class="stat-content">
+            <h3>Maturation Liability</h3>
+            <p>Rs. <?php echo number_format($liabilities ?? 0); ?></p>
+        </div>
     </div>
-
-    <!-- TDS Widget -->
-    <div class="glass-card">
-        <h4 class="gold-text">Total TDS Collected</h4>
-        <h2 style="font-size: 32px; color: #4dff4d;">Rs. <?php echo number_format($total_tds ?? 0, 2); ?></h2>
-        <p style="font-size: 12px; opacity: 0.7;">Total tax deducted from all incentives.</p>
-    </div>
-
-    <!-- SC Widget -->
-    <div class="glass-card">
-        <h4 class="gold-text">Total Service Charges</h4>
-        <h2 style="font-size: 32px; color: #4dff4d;">Rs. <?php echo number_format($total_sc ?? 0, 2); ?></h2>
-        <p style="font-size: 12px; opacity: 0.7;">Total platform/service fees collected.</p>
+    <div class="card card-body stat-card">
+        <div class="stat-icon text-success"><i class="fas fa-percent"></i></div>
+        <div class="stat-content">
+            <h3>TDS Collected</h3>
+            <p>Rs. <?php echo number_format($total_tds ?? 0); ?></p>
+        </div>
     </div>
 </div>
 
-<div class="dashboard-grid" style="margin-top: 24px;">
-    <!-- Payout Widget -->
-    <div class="glass-card">
-        <h4 class="gold-text">Total Redemptions</h4>
-        <h2 style="font-size: 32px;">Rs. <?php echo number_format($redemptions ?? 0, 2); ?></h2>
-        <p style="font-size: 12px; opacity: 0.7;">Total value of gold vouchers claimed and approved.</p>
+<div class="dashboard-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding:0;">
+    <div class="card">
+        <div class="card-header bg-white">
+            <h4 class="m-0">Incentive Distribution</h4>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th style="text-align: right;">Distributed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($commissions as $comm): ?>
+                        <tr>
+                            <td><strong><?php echo str_replace('_', ' ', strtoupper($comm['type'])); ?></strong></td>
+                            <td style="text-align: right;"><strong class="text-primary">Rs. <?php echo number_format($comm['total'], 2); ?></strong></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<div class="glass-card" style="margin-top: 24px;">
-    <h3 class="gold-text">Commission Breakdown</h3>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-        <thead>
-            <tr style="border-bottom: 2px solid var(--glass-border);">
-                <th style="text-align: left; padding: 10px;">Incentive Type</th>
-                <th style="text-align: right; padding: 10px;">Total Distributed</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($commissions as $comm): ?>
-                <tr style="border-bottom: 1px solid var(--glass-border);">
-                    <td style="padding: 10px;"><?php echo str_replace('_', ' ', strtoupper($comm['type'])); ?></td>
-                    <td style="padding: 10px; text-align: right;" class="gold-text">Rs. <?php echo number_format($comm['total'], 2); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
-
-<div class="glass-card" style="margin-top: 24px;">
-    <h3 class="gold-text">Recent Sales Activity</h3>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-        <thead>
-            <tr style="border-bottom: 2px solid var(--glass-border);">
-                <th style="text-align: left; padding: 10px;">Date</th>
-                <th style="text-align: right; padding: 10px;">Bookings</th>
-                <th style="text-align: right; padding: 10px;">Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($sales_trend as $day): ?>
-                <tr style="border-bottom: 1px solid var(--glass-border);">
-                    <td style="padding: 10px;"><?php echo date('d M Y', strtotime($day['date'])); ?></td>
-                    <td style="padding: 10px; text-align: right;"><?php echo $day['count']; ?></td>
-                    <td style="padding: 10px; text-align: right;">Rs. <?php echo number_format($day['total'], 2); ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+    <div class="card">
+        <div class="card-header bg-white">
+            <h4 class="m-0">Sales Trend (7 Days)</h4>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th style="text-align: center;">Sales</th>
+                        <th style="text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($sales_trend as $day): ?>
+                        <tr>
+                            <td><?php echo date('d M Y', strtotime($day['date'])); ?></td>
+                            <td style="text-align: center;"><?php echo $day['count']; ?></td>
+                            <td style="text-align: right;">Rs. <?php echo number_format($day['total']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <?php require_once '../layouts/footer.php'; ?>

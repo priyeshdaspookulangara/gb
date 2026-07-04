@@ -1,7 +1,7 @@
 <?php
 // dashboards/wallet.php
 require_once '../config/db.php';
-require_once '../layouts/header.php';
+require_once '../auth/auth_helper.php';
 require_login();
 
 $user_id = $_SESSION['user_id'];
@@ -12,65 +12,92 @@ $stmt->execute([$user_id]);
 $data = $stmt->fetch();
 $wallet = $data;
 
-$stmt = $pdo->prepare("SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC");
+$stmt = $pdo->prepare("SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
 $stmt->execute([$user_id]);
 $transactions = $stmt->fetchAll();
+
+require_once '../layouts/header.php';
 ?>
 
-<div class="dashboard-grid">
-    <div class="glass-card">
-        <h4 class="gold-text">Available Balance</h4>
-        <h2 class="gold-gradient-text" style="font-size: 36px;">Rs. <?php echo number_format($wallet['balance'] ?? 0, 2); ?></h2>
-
-        <?php if ($data['kyc_status'] !== 'approved'): ?>
-            <p style="color: #ffcc00; font-size: 12px; margin-top: 15px;">KYC verification required for withdrawals. <a href="kyc.php" class="gold-text">Upload documents</a>.</p>
-            <button class="btn-gold" style="margin-top: 10px; width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>Withdraw Funds</button>
-        <?php elseif (!$data['bank_name']): ?>
-            <p style="color: #ff4d4d; font-size: 12px; margin-top: 15px;">Please <a href="profile.php" class="gold-text">update bank details</a> to withdraw.</p>
-            <button class="btn-gold" style="margin-top: 10px; width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>Withdraw Funds</button>
-        <?php else: ?>
-            <a href="request_withdrawal.php" class="btn-gold" style="margin-top: 20px; width: 100%; text-align: center;">Withdraw Funds</a>
-        <?php endif; ?>
+<div class="card-group-row">
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+        <div class="stat-content">
+            <h3>Available Balance</h3>
+            <p>Rs. <?php echo number_format($wallet['balance'] ?? 0, 2); ?></p>
+        </div>
     </div>
-
-    <div class="glass-card">
-        <h4 class="gold-text">Lifetime Earnings</h4>
-        <h2 style="font-size: 36px;">Rs. <?php echo number_format($wallet['total_earned'] ?? 0, 2); ?></h2>
-        <p style="font-size: 12px; color: #ff4d4d; margin-bottom: 5px;">Total TDS: Rs. <?php echo number_format($wallet['total_tds'] ?? 0, 2); ?></p>
-        <p style="font-size: 12px; color: #ff4d4d;">Total Service Charge: Rs. <?php echo number_format($wallet['total_service_charge'] ?? 0, 2); ?></p>
+    <div class="card card-body stat-card">
+        <div class="stat-icon text-success"><i class="fas fa-arrow-up-right-dots"></i></div>
+        <div class="stat-content">
+            <h3>Lifetime Earned</h3>
+            <p>Rs. <?php echo number_format($wallet['total_earned'] ?? 0, 2); ?></p>
+        </div>
+    </div>
+    <div class="card card-body stat-card">
+        <div class="stat-icon text-danger"><i class="fas fa-file-invoice-dollar"></i></div>
+        <div class="stat-content">
+            <h3>Total Deductions</h3>
+            <p>Rs. <?php echo number_format(($wallet['total_tds'] ?? 0) + ($wallet['total_service_charge'] ?? 0), 2); ?></p>
+        </div>
     </div>
 </div>
 
-<div class="glass-card" style="margin-top: 24px;">
-    <h3 class="gold-text">Transaction History</h3>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-        <thead>
-            <tr style="border-bottom: 2px solid var(--glass-border);">
-                <th style="text-align: left; padding: 10px;">Type</th>
-                <th style="text-align: left; padding: 10px;">Description</th>
-                <th style="text-align: right; padding: 10px;">Net Amount</th>
-                <th style="text-align: right; padding: 10px;">TDS</th>
-                <th style="text-align: right; padding: 10px;">SC</th>
-                <th style="text-align: left; padding: 10px;">Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (empty($transactions)): ?>
-                <tr><td colspan="4" style="text-align: center; padding: 20px;">No transactions yet.</td></tr>
-            <?php else: ?>
-                <?php foreach ($transactions as $tx): ?>
-                    <tr style="border-bottom: 1px solid var(--glass-border);">
-                        <td style="padding: 10px;"><?php echo str_replace('_', ' ', strtoupper($tx['type'])); ?></td>
-                        <td style="padding: 10px; font-size: 14px; opacity: 0.8;"><?php echo htmlspecialchars($tx['description']); ?></td>
-                        <td style="padding: 10px; text-align: right;" class="gold-text">Rs. <?php echo number_format($tx['amount'], 2); ?></td>
-                        <td style="padding: 10px; text-align: right; color: #ff4d4d;">Rs. <?php echo number_format($tx['tds_amount'], 2); ?></td>
-                        <td style="padding: 10px; text-align: right; color: #ff4d4d;">Rs. <?php echo number_format($tx['service_charge'], 2); ?></td>
-                        <td style="padding: 10px; font-size: 12px;"><?php echo date('d M Y H:i', strtotime($tx['created_at'])); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </tbody>
-    </table>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="m-0">Withdraw Funds</h4>
+            </div>
+            <div class="card-body">
+                <?php if ($data['kyc_status'] !== 'approved'): ?>
+                    <div class="status pending" style="margin-bottom: 20px;">KYC verification required. <a href="kyc.php" class="gold-text">Verify now</a>.</div>
+                    <button class="btn-primary" style="width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>Request Payout</button>
+                <?php elseif (!$data['bank_name']): ?>
+                    <div class="status rejected" style="margin-bottom: 20px;">Bank details missing. <a href="profile.php" class="gold-text">Update now</a>.</div>
+                    <button class="btn-primary" style="width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>Request Payout</button>
+                <?php else: ?>
+                    <p class="text-muted" style="font-size: 13px; margin-bottom: 20px;">Funds will be sent to: <br><strong><?php echo htmlspecialchars($data['bank_name']); ?></strong></p>
+                    <a href="request_withdrawal.php" class="btn-primary" style="width: 100%; text-align: center;">Request Payout</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="m-0">Recent Transactions</h4>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th style="text-align: right;">Net Credit</th>
+                            <th style="text-align: right;">Deductions</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($transactions)): ?>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px;">No transactions yet.</td></tr>
+                        <?php else: ?>
+                            <?php foreach ($transactions as $tx): ?>
+                                <tr>
+                                    <td><span class="status pending" style="background:#f1f5f9; color: #475569; font-size: 10px;"><?php echo str_replace('_', ' ', strtoupper($tx['type'])); ?></span></td>
+                                    <td><small><?php echo htmlspecialchars($tx['description']); ?></small></td>
+                                    <td style="text-align: right;"><strong class="<?php echo $tx['amount'] >= 0 ? 'text-success' : 'text-danger'; ?>">Rs. <?php echo number_format($tx['amount'], 2); ?></strong></td>
+                                    <td style="text-align: right; color: var(--danger-color); font-size: 11px;">Rs. <?php echo number_format($tx['tds_amount'] + $tx['service_charge'], 2); ?></td>
+                                    <td class="text-muted" style="font-size: 11px;"><?php echo date('d M Y', strtotime($tx['created_at'])); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php require_once '../layouts/footer.php'; ?>

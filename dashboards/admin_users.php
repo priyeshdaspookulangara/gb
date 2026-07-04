@@ -17,68 +17,76 @@ require_once '../layouts/header.php';
 $users = $pdo->query("SELECT * FROM users WHERE role != 'admin' ORDER BY created_at DESC")->fetchAll();
 ?>
 
-<div class="glass-card">
-    <h2 class="gold-gradient-text">Manage Users</h2>
-    <p>Verify KYC and manage system participants.</p>
-
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-        <thead>
-            <tr style="border-bottom: 2px solid var(--glass-border);">
-                <th style="text-align: left; padding: 10px;">User</th>
-                <th style="text-align: left; padding: 10px;">Role</th>
-                <th style="text-align: left; padding: 10px;">KYC Status</th>
-                <th style="text-align: right; padding: 10px;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($users as $user): ?>
-                <tr style="border-bottom: 1px solid var(--glass-border);">
-                    <td style="padding: 10px; display: flex; align-items: center; gap: 15px;">
-                        <?php
-                        $pp = $user['profile_pic'] ? "../uploads/profile/".$user['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($user['full_name'])."&background=random";
-                        ?>
-                        <img src="<?php echo $pp; ?>" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--glass-border);">
-                        <div>
-                            <strong><?php echo htmlspecialchars($user['full_name']); ?></strong><br>
-                            <small><?php echo htmlspecialchars($user['username']); ?> | <?php echo $user['phone']; ?></small>
-                        </div>
-                    </td>
-                    <td style="padding: 10px;">
-                        <?php echo strtoupper($user['role']); ?>
-                        <div style="font-size: 10px; margin-top: 5px; opacity: 0.8;">
-                            <?php if ($user['bank_name']): ?>
-                                Bank: <?php echo htmlspecialchars($user['bank_name']); ?>
-                            <?php else: ?>
-                                <span style="color: #ff4d4d;">No Bank Details</span>
-                            <?php endif; ?>
-                        </div>
-                    </td>
-                    <td style="padding: 10px;">
-                        <span style="color: <?php echo ($user['kyc_status'] == 'approved') ? '#4dff4d' : (($user['kyc_status'] == 'rejected') ? '#ff4d4d' : '#ffcc00'); ?>">
-                            <?php echo strtoupper($user['kyc_status']); ?>
-                        </span>
-                        <?php if ($user['kyc_aadhaar']): ?>
-                            <div style="margin-top: 5px; font-size: 10px;">
-                                <a href="../uploads/kyc/<?php echo $user['kyc_aadhaar']; ?>" target="_blank" style="color: var(--brand-gold-pure);">Aadhaar</a> |
-                                <a href="../uploads/kyc/<?php echo $user['kyc_pan']; ?>" target="_blank" style="color: var(--brand-gold-pure);">PAN</a> |
-                                <a href="../uploads/kyc/<?php echo $user['kyc_bank']; ?>" target="_blank" style="color: var(--brand-gold-pure);">Bank</a>
-                            </div>
-                        <?php endif; ?>
-                    </td>
-                    <td style="padding: 10px; text-align: right;">
-                        <?php if ($user['kyc_status'] == 'pending'): ?>
-                            <a href="?action=approve&id=<?php echo $user['id']; ?>" class="gold-text" style="margin-right: 10px;">Approve</a>
-                            <a href="?action=reject&id=<?php echo $user['id']; ?>" style="color: #ff4d4d;">Reject</a>
-                        <?php elseif ($user['kyc_status'] == 'approved'): ?>
-                            <a href="?action=reject&id=<?php echo $user['id']; ?>" style="color: #ff4d4d; font-size: 11px;">Revoke</a>
-                        <?php else: ?>
-                            <a href="?action=approve&id=<?php echo $user['id']; ?>" class="gold-text" style="font-size: 11px;">Re-Approve</a>
-                        <?php endif; ?>
-                    </td>
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h4 class="m-0">User Directory</h4>
+        <div class="filter-group">
+            <input type="text" class="form-control" placeholder="Search members..." style="width: 200px;">
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Role / Rank</th>
+                    <th>KYC Status</th>
+                    <th>Banking</th>
+                    <th style="text-align: right;">Action</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user): ?>
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <?php $pp = $user['profile_pic'] ? "../uploads/profile/".$user['profile_pic'] : "https://ui-avatars.com/api/?name=".urlencode($user['full_name'])."&background=random"; ?>
+                                <img src="<?php echo $pp; ?>" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">
+                                <div>
+                                    <div style="font-weight: 600;"><?php echo htmlspecialchars($user['full_name']); ?></div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">@<?php echo htmlspecialchars($user['username']); ?></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 500;"><?php echo strtoupper($user['role']); ?></div>
+                            <div style="font-size: 12px; color: var(--brand-magenta); font-weight: 600;"><?php echo $user['rank'] ?: 'NONE'; ?></div>
+                        </td>
+                        <td>
+                            <span class="status <?php echo $user['kyc_status']; ?>">
+                                <?php echo strtoupper($user['kyc_status']); ?>
+                            </span>
+                            <?php if ($user['kyc_aadhaar']): ?>
+                                <div style="margin-top: 8px; display: flex; gap: 5px;">
+                                    <a href="../uploads/kyc/<?php echo $user['kyc_aadhaar']; ?>" target="_blank" class="btn-primary" style="padding: 2px 6px; font-size: 9px;">ID</a>
+                                    <a href="../uploads/kyc/<?php echo $user['kyc_pan']; ?>" target="_blank" class="btn-primary" style="padding: 2px 6px; font-size: 9px;">PAN</a>
+                                    <a href="../uploads/kyc/<?php echo $user['kyc_bank']; ?>" target="_blank" class="btn-primary" style="padding: 2px 6px; font-size: 9px;">BK</a>
+                                </div>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ($user['bank_name']): ?>
+                                <div style="font-size: 13px;"><strong><?php echo htmlspecialchars($user['bank_name']); ?></strong></div>
+                                <div style="font-size: 11px; color: var(--text-muted);"><?php echo htmlspecialchars($user['account_number']); ?></div>
+                            <?php else: ?>
+                                <span class="text-danger" style="font-size: 11px;">Not Provided</span>
+                            <?php endif; ?>
+                        </td>
+                        <td style="text-align: right;">
+                            <?php if ($user['kyc_status'] == 'pending'): ?>
+                                <a href="?action=approve&id=<?php echo $user['id']; ?>" class="btn-primary" style="padding: 6px 12px; font-size: 12px;">Approve</a>
+                                <a href="?action=reject&id=<?php echo $user['id']; ?>" class="btn-primary" style="padding: 6px 12px; font-size: 12px; background: var(--danger-color);">Reject</a>
+                            <?php elseif ($user['kyc_status'] == 'approved'): ?>
+                                <a href="?action=reject&id=<?php echo $user['id']; ?>" style="color: var(--danger-color); font-size: 12px; text-decoration: none;">Revoke KYC</a>
+                            <?php else: ?>
+                                <a href="?action=approve&id=<?php echo $user['id']; ?>" style="color: var(--success-color); font-size: 12px; text-decoration: none;">Re-Approve</a>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <?php require_once '../layouts/footer.php'; ?>

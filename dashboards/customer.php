@@ -27,104 +27,114 @@ if ($booking && $booking['status'] === 'active') {
     $diff = $start->diff($now);
     $days_passed = $diff->days;
 
-    // Use duration from scheme if available, default to 11 months (335 days)
     $total_days = ($booking['duration_months'] ?? 11) * 30.44;
     $progress_percent = min(100, ($days_passed / $total_days) * 100);
 }
 ?>
 
-<div class="dashboard-grid">
-    <!-- Wallet Card -->
-    <div class="glass-card">
-        <h4 class="gold-text">E-Wallet Balance</h4>
-        <h2 class="gold-gradient-text" style="font-size: 36px;">Rs. <?php echo number_format($wallet['balance'] ?? 0, 2); ?></h2>
-        <p style="font-size: 14px; opacity: 0.7;">Reward Points: <?php echo $wallet['reward_points'] ?? 0; ?></p>
+<div class="card-group-row">
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-coins"></i></div>
+        <div class="stat-content">
+            <h3>Investment Balance</h3>
+            <p>Rs. <?php echo number_format($booking['amount'] ?? 0); ?></p>
+        </div>
     </div>
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-content">
+            <h3>Maturity Target</h3>
+            <p>Rs. <?php echo number_format($booking['maturity_amount'] ?? 0); ?></p>
+        </div>
+    </div>
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+        <div class="stat-content">
+            <h3>Wallet Balance</h3>
+            <p>Rs. <?php echo number_format($wallet['balance'] ?? 0, 2); ?></p>
+        </div>
+    </div>
+    <div class="card card-body stat-card">
+        <div class="stat-icon text-warning"><i class="fas fa-star"></i></div>
+        <div class="stat-content">
+            <h3>Reward Points</h3>
+            <p><?php echo $wallet['reward_points'] ?? 0; ?></p>
+        </div>
+    </div>
+</div>
 
-    <!-- Booking Status -->
-    <div class="glass-card">
-        <h4 class="gold-text">Advance Booking Status</h4>
+<div class="card">
+    <div class="card-header bg-white">
+        <h4 class="m-0">Maturity Lifecycle: <?php echo $booking['scheme_name'] ?? 'Active Plan'; ?></h4>
+    </div>
+    <div class="card-body">
         <?php if ($booking): ?>
-            <h3 style="margin: 10px 0;"><?php echo strtoupper($booking['status']); ?></h3>
-            <p>Amount: Rs. <?php echo number_format($booking['amount'], 2); ?></p>
-            <p>Date: <?php echo date('d M Y', strtotime($booking['created_at'])); ?></p>
+            <p class="text-muted" style="font-size: 14px; margin-bottom: 30px;">Your investment is maturing over <?php echo $booking['duration_months'] ?? 11; ?> months. Current progress: <strong><?php echo round($progress_percent); ?>%</strong></p>
+
+            <?php
+            $m1_month = $booking['milestone_1_month'] ?? 4;
+            $m1_amount = $booking['milestone_1_amount'] ?? 16000;
+            $m2_month = $booking['milestone_2_month'] ?? 8;
+            $m2_amount = $booking['milestone_2_amount'] ?? 20000;
+            $total_months = $booking['duration_months'] ?? 11;
+            $total_maturity = $booking['maturity_amount'] ?? 66000;
+
+            $m1_percent = ($m1_month / $total_months) * 100;
+            $m2_percent = ($m2_month / $total_months) * 100;
+            ?>
+
+            <div style="height: 12px; background: #e2e8f0; border-radius: 6px; position: relative; margin: 50px 0;">
+                <div style="height: 100%; width: <?php echo $progress_percent; ?>%; background: var(--brand-magenta); border-radius: 6px; transition: width 1s;"></div>
+
+                <!-- Milestone 1 -->
+                <div style="position: absolute; left: <?php echo $m1_percent; ?>%; top: -35px; transform: translateX(-50%); text-align: center;">
+                    <div style="width: 14px; height: 14px; background: <?php echo ($days_passed >= $m1_month * 30) ? 'var(--brand-magenta)' : '#cbd5e1'; ?>; border-radius: 50%; margin: 10px auto; border: 2px solid white;"></div>
+                    <span style="font-size: 11px; font-weight: 600;"><?php echo $m1_month; ?>M (₹<?php echo number_format($m1_amount/1000); ?>k)</span>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div style="position: absolute; left: <?php echo $m2_percent; ?>%; top: -35px; transform: translateX(-50%); text-align: center;">
+                    <div style="width: 14px; height: 14px; background: <?php echo ($days_passed >= $m2_month * 30) ? 'var(--brand-magenta)' : '#cbd5e1'; ?>; border-radius: 50%; margin: 10px auto; border: 2px solid white;"></div>
+                    <span style="font-size: 11px; font-weight: 600;"><?php echo $m2_month; ?>M (₹<?php echo number_format($m2_amount/1000); ?>k)</span>
+                </div>
+
+                <!-- Final -->
+                <div style="position: absolute; left: 100%; top: -35px; transform: translateX(-50%); text-align: center;">
+                    <div style="width: 14px; height: 14px; background: <?php echo ($days_passed >= $total_months * 30) ? 'var(--brand-magenta)' : '#cbd5e1'; ?>; border-radius: 50%; margin: 10px auto; border: 2px solid white;"></div>
+                    <span style="font-size: 11px; font-weight: 600;"><?php echo $total_months; ?>M (₹<?php echo number_format($total_maturity/1000); ?>k)</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 40px;">
+                <form method="POST" action="claim_voucher.php">
+                    <?php csrf_input(); ?>
+                    <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
+                    <input type="hidden" name="milestone" value="4_month">
+                    <button type="submit" class="btn-primary" <?php echo ($days_passed < $m1_month * 30) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month <?php echo $m1_month; ?> Voucher</button>
+                </form>
+
+                <form method="POST" action="claim_voucher.php">
+                    <?php csrf_input(); ?>
+                    <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
+                    <input type="hidden" name="milestone" value="8_month">
+                    <button type="submit" class="btn-primary" <?php echo ($days_passed < $m2_month * 30) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month <?php echo $m2_month; ?> Voucher</button>
+                </form>
+
+                <form method="POST" action="claim_voucher.php">
+                    <?php csrf_input(); ?>
+                    <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
+                    <input type="hidden" name="milestone" value="11_month">
+                    <button type="submit" class="btn-primary" <?php echo ($days_passed < $total_months * 30) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Full Maturity Payout</button>
+                </form>
+            </div>
         <?php else: ?>
-            <p>No active booking found.</p>
-            <a href="new_booking.php" class="btn-gold" style="margin-top: 10px;">Book Now</a>
+            <div style="text-align: center; padding: 40px;">
+                <i class="fas fa-folder-open" style="font-size: 48px; color: #e2e8f0; margin-bottom: 20px;"></i>
+                <p>You don't have an active gold booking scheme yet.</p>
+                <a href="new_booking.php" class="btn-primary" style="margin-top: 15px;">Explore Gold Schemes</a>
+            </div>
         <?php endif; ?>
     </div>
 </div>
-
-<!-- Gold Maturity Tracker -->
-<div class="glass-card" style="margin-top: 24px;">
-    <h3 class="gold-gradient-text">Gold Maturity Tracker: <?php echo $booking['scheme_name'] ?? 'Custom Package'; ?></h3>
-    <p>Track your investment maturation over <?php echo $booking['duration_months'] ?? 11; ?> months.</p>
-
-    <?php
-    $m1_month = $booking['milestone_1_month'] ?? 4;
-    $m1_amount = $booking['milestone_1_amount'] ?? 16000;
-    $m2_month = $booking['milestone_2_month'] ?? 8;
-    $m2_amount = $booking['milestone_2_amount'] ?? 20000;
-    $total_months = $booking['duration_months'] ?? 11;
-    $total_maturity = $booking['maturity_amount'] ?? 66000;
-
-    $m1_percent = ($m1_month / $total_months) * 100;
-    $m2_percent = ($m2_month / $total_months) * 100;
-    ?>
-
-    <div class="progress-container">
-        <div class="progress-fill" style="width: <?php echo $progress_percent; ?>%;"></div>
-
-        <!-- Milestone 1 -->
-        <div class="milestone <?php echo ($days_passed >= $m1_month * 30) ? 'active' : ''; ?>" style="left: <?php echo $m1_percent; ?>%;">
-            <div class="milestone-node"></div>
-            <div class="milestone-label"><?php echo $m1_month; ?> Months<br>Rs. <?php echo number_format($m1_amount); ?></div>
-        </div>
-
-        <!-- Milestone 2 -->
-        <div class="milestone <?php echo ($days_passed >= $m2_month * 30) ? 'active' : ''; ?>" style="left: <?php echo $m2_percent; ?>%;">
-            <div class="milestone-node"></div>
-            <div class="milestone-label"><?php echo $m2_month; ?> Months<br>Rs. <?php echo number_format($m2_amount); ?></div>
-        </div>
-
-        <!-- Final Maturation -->
-        <div class="milestone <?php echo ($days_passed >= $total_months * 30) ? 'active' : ''; ?>" style="left: 100%;">
-            <div class="milestone-node"></div>
-            <div class="milestone-label"><?php echo $total_months; ?> Months<br>Rs. <?php echo number_format($total_maturity); ?></div>
-        </div>
-    </div>
-
-    <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <form method="POST" action="claim_voucher.php">
-            <?php csrf_input(); ?>
-            <input type="hidden" name="booking_id" value="<?php echo $booking['id'] ?? 0; ?>">
-            <input type="hidden" name="milestone" value="4_month">
-            <button type="submit" class="btn-gold" <?php echo ($days_passed < $m1_month * 30) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month <?php echo $m1_month; ?> Voucher</button>
-        </form>
-
-        <form method="POST" action="claim_voucher.php">
-            <?php csrf_input(); ?>
-            <input type="hidden" name="booking_id" value="<?php echo $booking['id'] ?? 0; ?>">
-            <input type="hidden" name="milestone" value="8_month">
-            <button type="submit" class="btn-gold" <?php echo ($days_passed < $m2_month * 30) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month <?php echo $m2_month; ?> Voucher</button>
-        </form>
-
-        <form method="POST" action="claim_voucher.php">
-            <?php csrf_input(); ?>
-            <input type="hidden" name="booking_id" value="<?php echo $booking['id'] ?? 0; ?>">
-            <input type="hidden" name="milestone" value="11_month">
-            <button type="submit" class="btn-gold" <?php echo ($days_passed < $total_months * 30) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month <?php echo $total_months; ?> Maturity</button>
-        </form>
-    </div>
-</div>
-
-<script>
-    function updateTime() {
-        const now = new Date();
-        document.getElementById('live-time').innerText = now.toLocaleString();
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
-</script>
 
 <?php require_once '../layouts/footer.php'; ?>

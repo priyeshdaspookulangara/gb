@@ -15,74 +15,94 @@ $stmt = $pdo->prepare("SELECT w.*, s.direct_sales, s.team_sales, u.`rank`
 $stmt->execute([$user_id]);
 $data = $stmt->fetch();
 
-$referral_link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]/register.php?ref=" . $_SESSION['username'];
+$referral_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/register.php?ref=" . $_SESSION['username'];
 ?>
 
-<div class="dashboard-grid">
-    <div class="glass-card">
-        <h4 class="gold-text">Total Earnings</h4>
-        <h2 class="gold-gradient-text" style="font-size: 36px;">Rs. <?php echo number_format($data['total_earned'] ?? 0, 2); ?></h2>
-        <p>Wallet Balance: Rs. <?php echo number_format($data['balance'] ?? 0, 2); ?></p>
-    </div>
-
-    <div class="glass-card">
-        <h4 class="gold-text">Network Status</h4>
-        <h3 class="gold-gradient-text"><?php echo $data['rank'] ?? 'NONE'; ?> Rank</h3>
-        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
-            <span>Direct Sales: <strong><?php echo $data['direct_sales'] ?? 0; ?></strong></span>
-            <span>Team Sales: <strong><?php echo $data['team_sales'] ?? 0; ?></strong></span>
+<div class="card-group-row">
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+        <div class="stat-content">
+            <h3>Wallet Balance</h3>
+            <p>Rs. <?php echo number_format($data['balance'] ?? 0, 2); ?></p>
         </div>
     </div>
-
-    <div class="glass-card">
-        <h4 class="gold-text">Referral Link</h4>
-        <input type="text" value="<?php echo $referral_link; ?>" readonly
-               style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white; padding: 10px; border-radius: 5px; margin: 10px 0;">
-        <button class="btn-gold" onclick="copyLink()" style="width: 100%;">Copy Link</button>
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+        <div class="stat-content">
+            <h3>Current Rank</h3>
+            <p style="color: var(--brand-magenta);"><?php echo $data['rank'] ?? 'NONE'; ?></p>
+        </div>
+    </div>
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-content">
+            <h3>Team Sales</h3>
+            <p><?php echo $data['team_sales'] ?? 0; ?></p>
+        </div>
+    </div>
+    <div class="card card-body stat-card">
+        <div class="stat-icon text-success"><i class="fas fa-money-bill-trend-up"></i></div>
+        <div class="stat-content">
+            <h3>Total Earned</h3>
+            <p>Rs. <?php echo number_format($data['total_earned'] ?? 0, 2); ?></p>
+        </div>
     </div>
 </div>
 
-<div class="glass-card" style="margin-top: 24px;">
-    <h3 class="gold-text">Income Breakdown</h3>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-        <tr style="border-bottom: 1px solid var(--glass-border);">
-            <th style="text-align: left; padding: 10px;">Category</th>
-            <th style="text-align: right; padding: 10px;">Amount</th>
-        </tr>
-        <tr>
-            <td style="padding: 10px;">Direct Referral Incentives</td>
-            <td style="text-align: right; padding: 10px;">Rs. <?php echo number_format($data['referral_income'] ?? 0, 2); ?></td>
-        </tr>
-        <tr>
-            <td style="padding: 10px;">Level Incentives</td>
-            <td style="text-align: right; padding: 10px;">Rs. <?php echo number_format($data['level_income'] ?? 0, 2); ?></td>
-        </tr>
-        <tr>
-            <td style="padding: 10px;">Monthly Rank Incentives</td>
-            <td style="text-align: right; padding: 10px;">Rs. <?php echo number_format($data['rank_income'] ?? 0, 2); ?></td>
-        </tr>
-    </table>
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="m-0">Income Breakdown</h4>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><strong>Direct Referral Incentives</strong></td>
+                            <td style="text-align: right;">Rs. <?php echo number_format($data['referral_income'] ?? 0, 2); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Level Distribution Income</strong></td>
+                            <td style="text-align: right;">Rs. <?php echo number_format($data['level_income'] ?? 0, 2); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Monthly Rank Maintenance</strong></td>
+                            <td style="text-align: right;">Rs. <?php echo number_format($data['rank_income'] ?? 0, 2); ?></td>
+                        </tr>
+                        <tr style="background: #f8fafc;">
+                            <td><strong>Total Tax/Service Deductions</strong></td>
+                            <td style="text-align: right; color: var(--danger-color);">- Rs. <?php echo number_format(($data['total_tds'] ?? 0) + ($data['total_service_charge'] ?? 0), 2); ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="m-0">Referral Link</h4>
+            </div>
+            <div class="card-body">
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">Share this link to grow your network and earn commissions.</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" value="<?php echo $referral_link; ?>" readonly id="ref-link" class="form-control" style="font-size: 12px;">
+                    <button class="btn-primary" onclick="copyRefLink()" style="white-space: nowrap;">Copy</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    function copyLink() {
-        const input = document.querySelector('input');
-        input.select();
-        document.execCommand('copy');
-        alert('Referral link copied to clipboard!');
+    function copyRefLink() {
+        const copyText = document.getElementById("ref-link");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        alert("Referral link copied!");
     }
-</script>
-
-<script>
-    function updateTime() {
-        const now = new Date();
-        const liveTime = document.getElementById('live-time');
-        if (liveTime) {
-            liveTime.innerText = now.toLocaleTimeString();
-        }
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
 </script>
 
 <?php require_once '../layouts/footer.php'; ?>

@@ -11,72 +11,90 @@ $total_revenue = $pdo->query("SELECT SUM(amount) FROM bookings WHERE status = 'a
 $pending_kyc = $pdo->query("SELECT COUNT(*) FROM users WHERE kyc_status = 'pending'")->fetchColumn();
 
 // Recent Transactions
-$stmt = $pdo->query("SELECT t.*, u.username FROM transactions t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC LIMIT 10");
+$stmt = $pdo->query("SELECT t.*, u.username FROM transactions t JOIN users u ON t.user_id = u.id ORDER BY t.created_at DESC LIMIT 5");
 $recent_transactions = $stmt->fetchAll();
 ?>
 
-<div class="dashboard-grid">
-    <div class="glass-card">
-        <h4 class="gold-text">Total Users</h4>
-        <h2 style="font-size: 36px;"><?php echo $total_users; ?></h2>
-        <p><?php echo $pending_kyc; ?> Pending KYC</p>
+<!-- Hospital Stats Style Cards -->
+<div class="card-group-row">
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-content">
+            <h3>Total Users</h3>
+            <p><?php echo $total_users; ?></p>
+        </div>
     </div>
-    <div class="glass-card">
-        <h4 class="gold-text">Active Bookings</h4>
-        <h2 style="font-size: 36px;"><?php echo $total_sales; ?></h2>
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+        <div class="stat-content">
+            <h3>Active Bookings</h3>
+            <p><?php echo $total_sales; ?></p>
+        </div>
     </div>
-    <div class="glass-card">
-        <h4 class="gold-text">Total Revenue</h4>
-        <h2 class="gold-gradient-text" style="font-size: 36px;">Rs. <?php echo number_format($total_revenue ?? 0, 2); ?></h2>
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-indian-rupee-sign"></i></div>
+        <div class="stat-content">
+            <h3>Total Revenue</h3>
+            <p><?php echo number_format($total_revenue ?? 0); ?></p>
+        </div>
+    </div>
+    <div class="card card-body stat-card">
+        <div class="stat-icon"><i class="fas fa-file-signature"></i></div>
+        <div class="stat-content">
+            <h3>Pending KYC</h3>
+            <p style="color: var(--warning-color);"><?php echo $pending_kyc; ?></p>
+        </div>
     </div>
 </div>
 
-<div class="glass-card" style="margin-top: 24px;">
-    <h3 class="gold-text">System Actions</h3>
-    <?php if (isset($_GET['success'])): ?>
-        <p style="color: #4dff4d; margin-bottom: 10px;">Salaries processed successfully!</p>
-    <?php endif; ?>
-    <form method="POST" action="process_salaries.php">
-        <?php csrf_input(); ?>
-        <button type="submit" class="btn-gold">Process Monthly Salaries</button>
-        <p style="font-size: 12px; margin-top: 10px; opacity: 0.7;">This will distribute rank incentives to all qualified promoters for the current month.</p>
-    </form>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h4 class="m-0">System Actions</h4>
+            </div>
+            <div class="card-body">
+                <?php if (isset($_GET['success'])): ?>
+                    <div class="status approved" style="margin-bottom: 20px;">Salaries processed successfully!</div>
+                <?php endif; ?>
+                <form method="POST" action="process_salaries.php" class="d-flex align-items-center gap-3">
+                    <?php csrf_input(); ?>
+                    <button type="submit" class="btn-primary">Process Monthly Salaries</button>
+                    <small class="text-muted">Distribute rank incentives to all qualified promoters for the current month.</small>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="glass-card" style="margin-top: 24px;">
-    <h3 class="gold-text">Recent Transactions</h3>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-        <thead style="border-bottom: 2px solid var(--glass-border);">
-            <tr>
-                <th style="text-align: left; padding: 10px;">User</th>
-                <th style="text-align: left; padding: 10px;">Type</th>
-                <th style="text-align: right; padding: 10px;">Amount</th>
-                <th style="text-align: left; padding: 10px;">Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($recent_transactions as $tx): ?>
-                <tr style="border-bottom: 1px solid var(--glass-border);">
-                    <td style="padding: 10px;"><?php echo htmlspecialchars($tx['username']); ?></td>
-                    <td style="padding: 10px;"><?php echo str_replace('_', ' ', strtoupper($tx['type'])); ?></td>
-                    <td style="padding: 10px; text-align: right;">Rs. <?php echo number_format($tx['amount'], 2); ?></td>
-                    <td style="padding: 10px;"><?php echo date('d M H:i', strtotime($tx['created_at'])); ?></td>
+<div class="card">
+    <div class="card-header bg-white">
+        <h4 class="m-0">Recent Activity</h4>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Gross</th>
+                    <th>Net Credit</th>
+                    <th>Date</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($recent_transactions as $tx): ?>
+                    <tr>
+                        <td><strong><?php echo htmlspecialchars($tx['username']); ?></strong></td>
+                        <td><span class="status pending" style="background:#f1f5f9; color: #475569;"><?php echo str_replace('_', ' ', strtoupper($tx['type'])); ?></span></td>
+                        <td class="text-muted">Rs. <?php echo number_format($tx['amount'] + $tx['tds_amount'] + $tx['service_charge'], 2); ?></td>
+                        <td><strong class="text-success">Rs. <?php echo number_format($tx['amount'], 2); ?></strong></td>
+                        <td class="text-muted"><?php echo date('d M, H:i', strtotime($tx['created_at'])); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<script>
-    function updateTime() {
-        const now = new Date();
-        const liveTime = document.getElementById('live-time');
-        if (liveTime) {
-            liveTime.innerText = now.toLocaleTimeString();
-        }
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
-</script>
 
 <?php require_once '../layouts/footer.php'; ?>
