@@ -3,6 +3,24 @@
 CREATE DATABASE IF NOT EXISTS gold_bullion_system;
 USE gold_bullion_system;
 
+-- Gold Schemes Table
+CREATE TABLE IF NOT EXISTS gold_schemes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    scheme_code VARCHAR(20) UNIQUE NOT NULL,
+    scheme_name VARCHAR(100) NOT NULL,
+    deposit_amount DECIMAL(15, 2) NOT NULL,
+    maturity_amount DECIMAL(15, 2) NOT NULL,
+    duration_months INT NOT NULL,
+    milestone_1_month INT DEFAULT 4,
+    milestone_1_amount DECIMAL(15, 2) DEFAULT 0,
+    milestone_2_month INT DEFAULT 8,
+    milestone_2_amount DECIMAL(15, 2) DEFAULT 0,
+    description TEXT,
+    scheme_image VARCHAR(255) DEFAULT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Users Table
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,12 +50,14 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS bookings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    scheme_id INT DEFAULT NULL,
     amount DECIMAL(15, 2) DEFAULT 36000.00,
     payment_method ENUM('gateway', 'epin') DEFAULT 'gateway',
     status ENUM('pending', 'active', 'completed') DEFAULT 'pending',
     activation_date TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (scheme_id) REFERENCES gold_schemes(id) ON DELETE SET NULL
 );
 
 -- ePins Table
@@ -195,6 +215,10 @@ INSERT INTO rank_configs (`rank`, team_sales_required, monthly_incentive) VALUES
 ('MM', 15625, 100000),
 ('GE', 78125, 500000),
 ('CE', 390625, 1000000);
+
+-- Default Gold Scheme
+INSERT INTO gold_schemes (scheme_code, scheme_name, deposit_amount, maturity_amount, duration_months, milestone_1_month, milestone_1_amount, milestone_2_month, milestone_2_amount, description)
+VALUES ('GS36K', 'Standard 11-Month Gold Scheme', 36000, 66000, 11, 4, 16000, 8, 20000, 'Our standard gold bullion advance booking scheme with 11-month maturation.');
 
 INSERT INTO users (username, password, email, full_name, phone, role, kyc_status)
 VALUES ('admin', '$2y$10$6QsIrTCDPbtR.MlQaIm.JOBn.bKKCSGQzOpzf26qglGTFkF/DwDMC', 'admin@luxegold.com', 'Super Admin', '0000000000', 'admin', 'approved');

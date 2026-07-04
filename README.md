@@ -32,10 +32,18 @@ This is a complete backend management and MLM portal for Luxe Gold & Diamonds an
 1. Import `database.sql` into your MySQL server.
 2. Update database credentials in `config/db.php`.
 
-### Default Admin Access
-- **URL**: `/login.php`
-- **Username**: `admin`
-- **Password**: `admin123`
+### Test Accounts (Seed Data)
+Passwords for all test accounts is `password` except for admin which is `admin123`.
+
+| Role | Username | Notes |
+| --- | --- | --- |
+| **Super Admin** | `admin` | Full system control |
+| **Promoter (L1)** | `promoter01` | Top-level promoter (LCE Rank) |
+| **Promoter (L1)** | `promoter02` | Direct under admin |
+| **Promoter (L2)** | `promoter03` | Under promoter01 |
+| **Promoter (L2)** | `promoter04` | Under promoter01 |
+| **Customer** | `customer01` | Under promoter01 |
+| **Customer** | `customer02` | Under promoter03 |
 
 ### Registration
 - Users can sign up via `/register.php`.

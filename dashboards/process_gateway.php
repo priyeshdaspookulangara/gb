@@ -10,8 +10,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     check_csrf();
 
     $user_id = $_SESSION['user_id'];
+    $scheme_id = $_POST['scheme_id'] ?? null;
 
     try {
+        if (!$scheme_id) throw new Exception("Please select a scheme.");
+
+        $stmt = $pdo->prepare("SELECT deposit_amount FROM gold_schemes WHERE id = ? AND is_active = 1");
+        $stmt->execute([$scheme_id]);
+        $scheme = $stmt->fetch();
+        if (!$scheme) throw new Exception("Invalid scheme.");
+
         $pdo->beginTransaction();
 
         // 1. Check existing active booking
@@ -26,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // We assume payment is successful for this implementation.
 
         // 3. Create and Activate Booking
-        $stmt = $pdo->prepare("INSERT INTO bookings (user_id, amount, payment_method, status) VALUES (?, 36000, 'gateway', 'pending')");
-        $stmt->execute([$user_id]);
+        $stmt = $pdo->prepare("INSERT INTO bookings (user_id, scheme_id, amount, payment_method, status) VALUES (?, ?, ?, 'gateway', 'pending')");
+        $stmt->execute([$user_id, $scheme_id, $scheme['deposit_amount']]);
         $booking_id = $pdo->lastInsertId();
 
         process_card_activation($pdo, $user_id, $booking_id);
