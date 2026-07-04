@@ -18,7 +18,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS kyc_bank VARCHAR(255) DEFAULT NULL;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_pic VARCHAR(255) DEFAULT NULL;
 
 -- 4. Add Payment Method to Bookings
-ALTER TABLE bookings ADD COLUMN IF NOT EXISTS payment_method ENUM('gateway', 'epin') DEFAULT 'gateway';
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS payment_method ENUM('gateway', 'epin', 'qr_code') DEFAULT 'gateway';
 
 -- 5. Add TDS and Service Charge tracking to Wallets
 ALTER TABLE wallets ADD COLUMN IF NOT EXISTS total_tds DECIMAL(15, 2) DEFAULT 0.00;

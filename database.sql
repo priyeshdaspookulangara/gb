@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     user_id INT NOT NULL,
     scheme_id INT DEFAULT NULL,
     amount DECIMAL(15, 2) DEFAULT 36000.00,
-    payment_method ENUM('gateway', 'epin') DEFAULT 'gateway',
+    payment_method ENUM('gateway', 'epin', 'qr_code') DEFAULT 'gateway',
     status ENUM('pending', 'active', 'completed') DEFAULT 'pending',
     activation_date TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -62,6 +62,9 @@ function process_card_activation($pdo, $user_id, $booking_id) {
         // 4. Update Booking Status
         $pdo->prepare("UPDATE bookings SET status = 'active', activation_date = NOW() WHERE id = ?")->execute([$booking_id]);
 
+        // 5. Automatically Promote Customer to Promoter
+        $pdo->prepare("UPDATE users SET role = 'promoter' WHERE id = ? AND role = 'customer'")->execute([$user_id]);
+
         if ($is_manual_transaction) $pdo->commit();
     } catch (Exception $e) {
         if ($is_manual_transaction && $pdo->inTransaction()) $pdo->rollBack();

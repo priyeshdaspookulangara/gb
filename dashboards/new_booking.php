@@ -47,7 +47,7 @@ $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1")->fetchA
         <div id="payment-options" style="margin-top: 40px; display: none;">
             <h3 class="gold-text" style="font-size: 18px; margin-bottom: 20px;">Step 2: Choose Payment Method for <span id="selected-scheme-name"></span></h3>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
                 <!-- Option 1: Gateway -->
                 <div class="glass-card" style="text-align: center; border-color: rgba(255,255,255,0.1);">
                     <h4 class="gold-text">Option 1</h4>
@@ -71,6 +71,17 @@ $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1")->fetchA
                         <button type="submit" class="btn-gold" style="width: 100%;">Activate</button>
                     </form>
                 </div>
+
+                <!-- Option 3: QR Code -->
+                <div class="glass-card" style="text-align: center; border-color: rgba(255,255,255,0.1);">
+                    <h4 class="gold-text">Option 3</h4>
+                    <p style="font-size: 14px; margin: 10px 0;">Scan QR Code</p>
+                    <form method="POST" action="process_qr.php">
+                        <?php csrf_input(); ?>
+                        <input type="hidden" name="scheme_id" id="qr-scheme-id">
+                        <button type="submit" class="btn-gold" style="width: 100%;">Pay via QR</button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -79,6 +90,7 @@ $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1")->fetchA
                 document.getElementById('selected-scheme-name').innerText = name;
                 document.getElementById('gw-scheme-id').value = id;
                 document.getElementById('epin-scheme-id').value = id;
+                document.getElementById('qr-scheme-id').value = id;
                 document.getElementById('payment-options').style.display = 'block';
 
                 // Highlight selection
