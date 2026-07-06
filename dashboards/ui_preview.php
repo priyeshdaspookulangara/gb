@@ -46,6 +46,53 @@ require_once '../layouts/header.php';
     </div>
 </div>
 
+<div class="row">
+    <div class="col-lg-8">
+        <div class="glass-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="m-0 gold-text">System Actions</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="process_salaries.php" class="d-flex align-items-center gap-3">
+                    <button type="submit" class="btn-gold">Process Monthly Salaries</button>
+                    <small class="text-muted" style="margin-left: 15px;">Distribute rank incentives to all qualified promoters for the current month.</small>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="glass-card">
+            <div class="card-header">
+                <h4 class="m-0 gold-text">Automation Status</h4>
+            </div>
+            <div style="margin-top: 15px;">
+                <div style="border-bottom: 1px solid var(--glass-border); padding: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px; font-weight: 600;">Daily Reward Points</span>
+                        <span class="status approved" style="font-size: 9px; padding: 2px 5px;">SUCCESS</span>
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">
+                        Today, 12:00 • 0.042s
+                    </div>
+                </div>
+                <div style="border-bottom: 1px solid var(--glass-border); padding: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px; font-weight: 600;">Monthly Salary Cron</span>
+                        <span class="status approved" style="font-size: 9px; padding: 2px 5px;">SUCCESS</span>
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">
+                        01 Jan, 00:00 • 0.156s
+                    </div>
+                </div>
+                <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button class="btn-primary" style="font-size: 10px; text-align: center; padding: 8px; border:none; cursor:pointer;">Run Daily Points</button>
+                    <button class="btn-primary" style="font-size: 10px; text-align: center; padding: 8px; border:none; cursor:pointer;">Run Salary Cron</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="card">
     <div class="card-header bg-white">
         <h4 class="m-0">Recent Activity Preview</h4>

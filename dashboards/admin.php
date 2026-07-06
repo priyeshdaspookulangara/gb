@@ -47,8 +47,13 @@ $recent_transactions = $stmt->fetchAll();
     </div>
 </div>
 
+<?php
+// Get Cron Stats
+$last_cron = $pdo->query("SELECT * FROM cron_logs ORDER BY created_at DESC LIMIT 5")->fetchAll();
+?>
+
 <div class="row">
-    <div class="col-12">
+    <div class="col-lg-8">
         <div class="glass-card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="m-0 gold-text">System Actions</h4>
@@ -62,6 +67,38 @@ $recent_transactions = $stmt->fetchAll();
                     <button type="submit" class="btn-gold">Process Monthly Salaries</button>
                     <small class="text-muted" style="margin-left: 15px;">Distribute rank incentives to all qualified promoters for the current month.</small>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="glass-card">
+            <div class="card-header">
+                <h4 class="m-0 gold-text">Automation Status</h4>
+            </div>
+            <div style="margin-top: 15px;">
+                <?php if (empty($last_cron)): ?>
+                    <p class="text-muted" style="font-size: 12px; text-align: center;">No cron logs found.</p>
+                <?php else: ?>
+                    <?php foreach ($last_cron as $log): ?>
+                        <div style="border-bottom: 1px solid var(--glass-border); padding: 10px 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 13px; font-weight: 600;"><?php echo $log['job_name']; ?></span>
+                                <span class="status <?php echo ($log['status'] == 'success') ? 'approved' : 'rejected'; ?>" style="font-size: 9px; padding: 2px 5px;">
+                                    <?php echo strtoupper($log['status']); ?>
+                                </span>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">
+                                <?php echo date('d M, H:i', strtotime($log['created_at'])); ?> • <?php echo round($log['execution_time'], 3); ?>s
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+                <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <a href="run_cron_manual.php?job=daily_reward_points" class="btn-primary" style="font-size: 10px; text-align: center; padding: 8px;">Run Daily Points</a>
+                    <a href="run_cron_manual.php?job=monthly_salary_cron" class="btn-primary" style="font-size: 10px; text-align: center; padding: 8px;">Run Salary Cron</a>
+                </div>
             </div>
         </div>
     </div>

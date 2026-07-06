@@ -98,6 +98,15 @@ CREATE TABLE IF NOT EXISTS transactions (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS cron_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    job_name VARCHAR(100) NOT NULL,
+    status ENUM('success', 'failed') NOT NULL,
+    message TEXT,
+    execution_time FLOAT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Milestone Redemptions Tracker
 CREATE TABLE IF NOT EXISTS milestone_redemptions (
     id INT AUTO_INCREMENT PRIMARY KEY,
