@@ -5,3 +5,10 @@
 [Mon Jul  6 08:43:49 2026] [::1]:41118 Accepted
 [Mon Jul  6 08:43:49 2026] [::1]:41118 [200]: GET /login.php
 [Mon Jul  6 08:43:49 2026] [::1]:41118 Closing
+[Mon Jul  6 09:29:22 2026] [::1]:44446 Accepted
+[Mon Jul  6 09:29:22 2026] PHP Notice:  session_start(): Ignoring session_start() because a session is already active (started from /app/dashboards/ui_preview.php on line 3) in /app/auth/auth_helper.php on line 3
+[Mon Jul  6 09:29:22 2026] [::1]:44446 [200]: GET /dashboards/ui_preview.php
+[Mon Jul  6 09:29:22 2026] [::1]:44446 Closing
+[Mon Jul  6 09:29:22 2026] [::1]:44462 Accepted
+[Mon Jul  6 09:29:22 2026] [::1]:44462 [200]: GET /assets/css/theme.css
+[Mon Jul  6 09:29:22 2026] [::1]:44462 Closing

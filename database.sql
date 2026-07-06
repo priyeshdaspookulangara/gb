@@ -227,8 +227,12 @@ INSERT INTO rank_configs (`rank`, team_sales_required, monthly_incentive) VALUES
 ('CE', 390625, 1000000);
 
 -- Default Gold Scheme
+-- Default Gold Schemes
 INSERT INTO gold_schemes (scheme_code, scheme_name, deposit_amount, maturity_amount, duration_months, milestone_1_month, milestone_1_amount, milestone_2_month, milestone_2_amount, description)
-VALUES ('GS36K', 'Standard 11-Month Gold Scheme', 36000, 66000, 11, 4, 16000, 8, 20000, 'Our standard gold bullion advance booking scheme with 11-month maturation.');
+VALUES
+('GS36K', 'Standard 11-Month Gold Scheme', 36000, 66000, 11, 4, 16000, 8, 20000, 'Our standard gold bullion advance booking scheme with 11-month maturation.'),
+('GS18K', 'Starter 6-Month Gold Scheme', 18000, 30000, 6, 2, 8000, 4, 10000, 'A compact 6-month maturation plan for new investors.'),
+('GS72K', 'Premium 15-Month Gold Scheme', 72000, 150000, 15, 5, 35000, 10, 50000, 'High-yield 15-month maturation plan for serious bullion collectors.');
 
 INSERT INTO users (username, password, email, full_name, phone, role, kyc_status)
 VALUES ('admin', '$2y$10$6QsIrTCDPbtR.MlQaIm.JOBn.bKKCSGQzOpzf26qglGTFkF/DwDMC', 'admin@luxegold.com', 'Super Admin', '0000000000', 'admin', 'approved');

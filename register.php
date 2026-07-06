@@ -3,6 +3,9 @@
 require_once 'config/db.php';
 require_once 'auth/auth_helper.php';
 
+// Fetch active gold schemes
+$schemes = $pdo->query("SELECT id, scheme_name, deposit_amount FROM gold_schemes WHERE is_active = 1")->fetchAll();
+
 $message = '';
 $error = '';
 
@@ -15,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = $_POST['phone'] ?? '';
     $role = $_POST['role'] ?? 'customer';
     $sponsor_name = $_POST['sponsor'] ?? '';
+    $scheme_id = $_POST['scheme_id'] ?? null;
 
     // Role Whitelist to prevent admin escalation
     $allowed_roles = ['customer', 'promoter'];
@@ -39,10 +43,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$username, $password, $email, $full_name, $phone, $role, $sponsor_id]);
         $new_user_id = $pdo->lastInsertId();
 
-        // Create wallet
+        // 1. Create wallet
         $pdo->prepare("INSERT INTO wallets (user_id) VALUES (?)")->execute([$new_user_id]);
 
-        // Update network tree (Closure Table)
+        // 2. Create Pending Booking for Selected Scheme
+        if ($scheme_id) {
+            $stmt = $pdo->prepare("SELECT deposit_amount FROM gold_schemes WHERE id = ?");
+            $stmt->execute([$scheme_id]);
+            $amount = $stmt->fetchColumn();
+
+            $stmt = $pdo->prepare("INSERT INTO bookings (user_id, scheme_id, amount, status) VALUES (?, ?, ?, 'pending')");
+            $stmt->execute([$new_user_id, $scheme_id, $amount]);
+        }
+
+        // 3. Update network tree (Closure Table)
         $pdo->prepare("INSERT INTO network_tree (ancestor_id, descendant_id, distance) VALUES (?, ?, 0)")->execute([$new_user_id, $new_user_id]);
         if ($sponsor_id) {
             $pdo->prepare("INSERT INTO network_tree (ancestor_id, descendant_id, distance)
@@ -53,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->commit();
         $message = "Registration successful! <a href='login.php' class='gold-text'>Login now</a>";
     } catch (Exception $e) {
-        $pdo->rollBack();
+        if ($pdo->inTransaction()) $pdo->rollBack();
         $error = "Registration failed: " . $e->getMessage();
     }
 }
@@ -87,13 +101,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="password" name="password" placeholder="Password" required>
             <input type="text" name="sponsor" placeholder="Sponsor Username (Optional)" value="<?php echo htmlspecialchars($_GET['ref'] ?? ''); ?>">
 
-            <label style="margin-top: 10px; display: block;">I am joining as:</label>
-            <select name="role">
-                <option value="customer">Customer (Investor)</option>
-                <option value="promoter">Earn Buy Promoter (Affiliate)</option>
-            </select>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="margin-top: 10px; display: block; font-size: 12px; color: var(--text-muted);">Joining As:</label>
+                    <select name="role">
+                        <option value="customer">Customer</option>
+                        <option value="promoter">Promoter</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="margin-top: 10px; display: block; font-size: 12px; color: var(--text-muted);">Select Plan:</label>
+                    <select name="scheme_id" required>
+                        <option value="">-- Select --</option>
+                        <?php foreach ($schemes as $s): ?>
+                            <option value="<?php echo $s['id']; ?>">
+                                <?php echo htmlspecialchars($s['scheme_name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
 
-            <button type="submit" class="btn-gold" style="width: 100%; margin-top: 20px;">Register</button>
+            <button type="submit" class="btn-gold" style="width: 100%; margin-top: 20px;">Register & Book Gold</button>
         </form>
         <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 14px;">
             <p>Already have an account? <a href="login.php" class="gold-text">Login here</a></p>
