@@ -1,0 +1,7 @@
+[Mon Jul  6 08:40:58 2026] PHP 8.3.6 Development Server (http://localhost:8080) started
+[Mon Jul  6 08:41:02 2026] [::1]:46702 Accepted
+[Mon Jul  6 08:41:02 2026] [::1]:46702 [200]: GET /login.php
+[Mon Jul  6 08:41:02 2026] [::1]:46702 Closing
+[Mon Jul  6 08:43:49 2026] [::1]:41118 Accepted
+[Mon Jul  6 08:43:49 2026] [::1]:41118 [200]: GET /login.php
+[Mon Jul  6 08:43:49 2026] [::1]:41118 Closing

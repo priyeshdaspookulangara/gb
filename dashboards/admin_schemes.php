@@ -24,15 +24,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $m1_amount = $_POST['milestone_1_amount'];
         $m2_month = $_POST['milestone_2_month'];
         $m2_amount = $_POST['milestone_2_amount'];
-        $desc = $_POST['description'];
+        $desc = $_POST['description'] ?? '';
 
         $image_name = $_POST['existing_image'] ?? null;
         if (isset($_FILES['scheme_image']) && $_FILES['scheme_image']['error'] === UPLOAD_ERR_OK) {
             $ext = strtolower(pathinfo($_FILES['scheme_image']['name'], PATHINFO_EXTENSION));
-            if (in_array($ext, ['jpg', 'jpeg', 'png'])) {
+            if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'])) {
                 $image_name = "scheme_" . time() . "." . $ext;
-                move_uploaded_file($_FILES['scheme_image']['tmp_name'], "../uploads/schemes/" . $image_name);
+                if (!move_uploaded_file($_FILES['scheme_image']['tmp_name'], "../uploads/schemes/" . $image_name)) {
+                    $error = "Failed to move uploaded file.";
+                }
+            } else {
+                $error = "Invalid file type. Only JPG, PNG, and WEBP allowed.";
             }
+        } elseif (isset($_FILES['scheme_image']) && $_FILES['scheme_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+            $error = "File upload error code: " . $_FILES['scheme_image']['error'];
         }
 
         if ($action === 'create') {
@@ -66,6 +72,7 @@ require_once '../layouts/header.php';
     <div class="glass-card">
         <h3 class="gold-text">Add New Scheme</h3>
         <?php if ($message): ?><p class="status approved" style="margin-top: 10px;"><?php echo $message; ?></p><?php endif; ?>
+        <?php if ($error): ?><p class="status rejected" style="margin-top: 10px;"><?php echo $error; ?></p><?php endif; ?>
 
         <form method="POST" enctype="multipart/form-data" style="margin-top: 20px;">
             <?php csrf_input(); ?>
@@ -116,6 +123,11 @@ require_once '../layouts/header.php';
                     <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">M2 Amount (Rs)</label>
                     <input type="number" name="milestone_2_amount" class="form-control">
                 </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px;">Description</label>
+                <textarea name="description" class="form-control" placeholder="Plan details..." rows="3"></textarea>
             </div>
 
             <div style="margin-bottom: 20px;">
