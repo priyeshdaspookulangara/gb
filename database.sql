@@ -203,6 +203,7 @@ INSERT INTO settings (setting_key, setting_value) VALUES
 ('month_4_redemption', '16000'),
 ('month_8_redemption', '20000'),
 ('direct_referral_incentive', '2000'),
+('cron_secret_key', 'luxe_gold_secret_123'),
 ('bullion_sales_metric', '0');
 
 INSERT INTO level_configs (`level`, milestone_sales, card_sale_incentive, product_sale_per_point, rank_name) VALUES

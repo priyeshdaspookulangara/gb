@@ -99,6 +99,13 @@ $last_cron = $pdo->query("SELECT * FROM cron_logs ORDER BY created_at DESC LIMIT
                     <a href="run_cron_manual.php?job=daily_reward_points" class="btn-primary" style="font-size: 10px; text-align: center; padding: 8px;">Run Daily Points</a>
                     <a href="run_cron_manual.php?job=monthly_salary_cron" class="btn-primary" style="font-size: 10px; text-align: center; padding: 8px;">Run Salary Cron</a>
                 </div>
+
+                <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--glass-border);">
+                    <small style="color: var(--text-muted); font-size: 10px; display: block; margin-bottom: 5px;">External Cron URL:</small>
+                    <code style="font-size: 10px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; display: block; word-break: break-all;">
+                        /cron/index.php?key=<?php echo get_setting($pdo, 'cron_secret_key'); ?>
+                    </code>
+                </div>
             </div>
         </div>
     </div>
