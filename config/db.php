@@ -1,7 +1,7 @@
 <?php
 // config/db.php
 
-$host = 'localhost';
+$host = '127.0.0.1';
 $db   = 'gold_bullion_system';
 $user = 'root'; // Change as per environment
 $pass = '';     // Change as per environment
