@@ -62,10 +62,10 @@ $last_cron = $pdo->query("SELECT * FROM cron_logs ORDER BY created_at DESC LIMIT
                 <?php if (isset($_GET['success'])): ?>
                     <div class="status approved" style="margin-bottom: 20px;">Salaries processed successfully!</div>
                 <?php endif; ?>
-                <form method="POST" action="process_salaries.php" class="d-flex align-items-center gap-3">
+                <form method="POST" action="process_salaries.php" style="display: flex; flex-wrap: wrap; align-items: center; gap: 15px;">
                     <?php csrf_input(); ?>
                     <button type="submit" class="btn-gold">Process Monthly Salaries</button>
-                    <small class="text-muted" style="margin-left: 15px;">Distribute rank incentives to all qualified promoters for the current month.</small>
+                    <small class="text-muted" style="flex: 1; min-width: 200px;">Distribute rank incentives to all qualified promoters for the current month.</small>
                 </form>
             </div>
         </div>

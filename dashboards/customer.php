@@ -105,26 +105,26 @@ if ($booking && $booking['status'] === 'active') {
                 </div>
             </div>
 
-            <div style="display: flex; gap: 15px; margin-top: 40px;">
-                <form method="POST" action="claim_voucher.php">
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 40px;">
+                <form method="POST" action="claim_voucher.php" style="flex: 1; min-width: 200px;">
                     <?php csrf_input(); ?>
                     <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
                     <input type="hidden" name="milestone" value="4_month">
-                    <button type="submit" class="btn-primary" <?php echo ($days_passed < $m1_month * 30) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month <?php echo $m1_month; ?> Voucher</button>
+                    <button type="submit" class="btn-primary" style="width: 100%;" <?php echo ($days_passed < $m1_month * 30) ? 'disabled style="width: 100%; opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month <?php echo $m1_month; ?> Voucher</button>
                 </form>
 
-                <form method="POST" action="claim_voucher.php">
+                <form method="POST" action="claim_voucher.php" style="flex: 1; min-width: 200px;">
                     <?php csrf_input(); ?>
                     <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
                     <input type="hidden" name="milestone" value="8_month">
-                    <button type="submit" class="btn-primary" <?php echo ($days_passed < $m2_month * 30) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month <?php echo $m2_month; ?> Voucher</button>
+                    <button type="submit" class="btn-primary" style="width: 100%;" <?php echo ($days_passed < $m2_month * 30) ? 'disabled style="width: 100%; opacity:0.5; cursor:not-allowed;"' : ''; ?>>Claim Month <?php echo $m2_month; ?> Voucher</button>
                 </form>
 
-                <form method="POST" action="claim_voucher.php">
+                <form method="POST" action="claim_voucher.php" style="flex: 1; min-width: 200px;">
                     <?php csrf_input(); ?>
                     <input type="hidden" name="booking_id" value="<?php echo $booking['id']; ?>">
                     <input type="hidden" name="milestone" value="11_month">
-                    <button type="submit" class="btn-primary" <?php echo ($days_passed < $total_months * 30) ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''; ?>>Full Maturity Payout</button>
+                    <button type="submit" class="btn-primary" style="width: 100%;" <?php echo ($days_passed < $total_months * 30) ? 'disabled style="width: 100%; opacity:0.5; cursor:not-allowed;"' : ''; ?>>Full Maturity Payout</button>
                 </form>
             </div>
         <?php else: ?>

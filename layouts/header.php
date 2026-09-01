@@ -16,11 +16,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="<?php echo ($_SESSION['role'] === 'admin') ? 'theme-light' : 'theme-dark'; ?>">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <i class="fas fa-coins" style="color: var(--brand-magenta); font-size: 24px;"></i>
             <span style="font-weight: 700; font-size: 20px; color: var(--brand-magenta);">LUXE GOLD</span>
+            <button id="sidebar-close" class="mobile-sidebar-close" aria-label="Close sidebar">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
 
         <div class="sidebar-user">
@@ -90,9 +96,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <!-- Top Navbar -->
         <nav class="top-navbar">
             <div style="display: flex; align-items: center; gap: 15px;">
-                <button id="sidebar-toggle" style="background:none; border:none; color:white; cursor:pointer; font-size: 20px;">
+                <button id="sidebar-toggle" class="hamburger-btn" aria-label="Toggle navigation menu">
                     <i class="fas fa-bars"></i>
                 </button>
+                <div class="navbar-brand-mobile">
+                    <i class="fas fa-coins" style="color: var(--brand-magenta); font-size: 20px;"></i>
+                    <span style="font-weight: 700; font-size: 16px; color: var(--brand-magenta);">LUXE GOLD</span>
+                </div>
                 <div class="search-form">
                     <i class="fas fa-search" style="opacity: 0.5;"></i>
                     <input type="text" placeholder="Search system...">

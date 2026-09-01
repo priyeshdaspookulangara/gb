@@ -1,13 +1,24 @@
-[Mon Jul 13 01:31:10 2026] PHP 8.3.6 Development Server (http://0.0.0.0:8000) started
-[Mon Jul 13 01:34:42 2026] 127.0.0.1:39754 Accepted
-[Mon Jul 13 01:34:42 2026] 127.0.0.1:39754 [200]: GET /login.php
-[Mon Jul 13 01:34:42 2026] 127.0.0.1:39754 Closing
-[Mon Jul 13 01:35:57 2026] 127.0.0.1:38282 Accepted
-[Mon Jul 13 01:35:57 2026] 127.0.0.1:38282 [200]: HEAD /login.php
-[Mon Jul 13 01:35:57 2026] 127.0.0.1:38282 Closing
-[Mon Jul 13 01:36:27 2026] 127.0.0.1:41028 Accepted
-[Mon Jul 13 01:36:27 2026] 127.0.0.1:41028 [200]: GET /login.php
-[Mon Jul 13 01:36:27 2026] 127.0.0.1:41028 Closing
-[Mon Jul 13 01:51:16 2026] 127.0.0.1:53576 Accepted
-[Mon Jul 13 01:51:16 2026] 127.0.0.1:53576 [200]: GET /login.php
-[Mon Jul 13 01:51:16 2026] 127.0.0.1:53576 Closing
+[Tue Sep  1 08:28:06 2026] PHP 8.3.6 Development Server (http://localhost:8080) started
+[Tue Sep  1 08:28:19 2026] [::1]:53864 Accepted
+[Tue Sep  1 08:28:19 2026] [::1]:53864 [200]: HEAD /gold-plans.php
+[Tue Sep  1 08:28:19 2026] [::1]:53864 Closing
+[Tue Sep  1 08:29:10 2026] [::1]:38820 Accepted
+[Tue Sep  1 08:29:10 2026] [::1]:38820 [200]: GET /gold-plans.php
+[Tue Sep  1 08:29:10 2026] [::1]:38820 Closing
+[Tue Sep  1 08:29:11 2026] [::1]:38826 Accepted
+[Tue Sep  1 08:29:11 2026] [::1]:38826 [200]: GET /login.php
+[Tue Sep  1 08:29:11 2026] [::1]:38826 Closing
+[Tue Sep  1 08:30:16 2026] [::1]:43156 Accepted
+[Tue Sep  1 08:30:16 2026] PHP Notice:  session_start(): Ignoring session_start() because a session is already active (started from /app/dashboards/ui_preview.php on line 3) in /app/auth/auth_helper.php on line 3
+[Tue Sep  1 08:30:16 2026] [::1]:43156 [200]: GET /dashboards/ui_preview.php
+[Tue Sep  1 08:30:16 2026] [::1]:43156 Closing
+[Tue Sep  1 08:30:16 2026] [::1]:43158 Accepted
+[Tue Sep  1 08:30:16 2026] [::1]:43158 [200]: GET /assets/css/theme.css
+[Tue Sep  1 08:30:16 2026] [::1]:43158 Closing
+[Tue Sep  1 08:30:20 2026] [::1]:43162 Accepted
+[Tue Sep  1 08:30:20 2026] PHP Notice:  session_start(): Ignoring session_start() because a session is already active (started from /app/dashboards/ui_preview.php on line 3) in /app/auth/auth_helper.php on line 3
+[Tue Sep  1 08:30:20 2026] [::1]:43162 [200]: GET /dashboards/ui_preview.php
+[Tue Sep  1 08:30:20 2026] [::1]:43162 Closing
+[Tue Sep  1 08:30:20 2026] [::1]:43176 Accepted
+[Tue Sep  1 08:30:20 2026] [::1]:43176 [200]: GET /assets/css/theme.css
+[Tue Sep  1 08:30:20 2026] [::1]:43176 Closing

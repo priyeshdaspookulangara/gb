@@ -76,13 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Gold Bullion System</title>
     <link rel="stylesheet" href="assets/css/theme.css">
     <style>
-        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 0; }
-        .reg-box { width: 500px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; }
+        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 30px 16px; }
+        .reg-box { width: 100%; max-width: 500px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; font-size: 14px; }
         option { background: var(--bg-dark-premium); color: white; }
+        .form-grid-2 { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 576px) { .form-grid-2 { grid-template-columns: 1fr 1fr; gap: 15px; } }
     </style>
 </head>
 <body>
@@ -101,16 +104,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="password" name="password" placeholder="Password" required>
             <input type="text" name="sponsor" placeholder="Sponsor Username (Optional)" value="<?php echo htmlspecialchars($_GET['ref'] ?? ''); ?>">
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="form-grid-2">
                 <div>
-                    <label style="margin-top: 10px; display: block; font-size: 12px; color: var(--text-muted);">Joining As:</label>
+                    <label style="margin-top: 6px; display: block; font-size: 12px; color: var(--text-muted);">Joining As:</label>
                     <select name="role">
                         <option value="customer">Customer</option>
                         <option value="promoter">Promoter</option>
                     </select>
                 </div>
                 <div>
-                    <label style="margin-top: 10px; display: block; font-size: 12px; color: var(--text-muted);">Select Plan:</label>
+                    <label style="margin-top: 6px; display: block; font-size: 12px; color: var(--text-muted);">Select Plan:</label>
                     <select name="scheme_id" required>
                         <option value="">-- Select --</option>
                         <?php foreach ($schemes as $s): ?>

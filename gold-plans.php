@@ -23,32 +23,50 @@ $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1 ORDER BY 
         .public-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 60px 20px;
+            padding: 30px 16px;
         }
         .navbar-public {
-            height: 70px;
-            background: rgba(22, 0, 13, 0.8);
+            min-height: 64px;
+            background: rgba(22, 0, 13, 0.9);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 40px;
+            padding: 12px 20px;
             position: sticky;
             top: 0;
             z-index: 1000;
+            gap: 15px;
+            flex-wrap: wrap;
         }
         .hero-section {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
         .hero-section h1 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 15px;
         }
         .hero-section p {
             color: var(--text-muted);
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+        }
+        .public-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 576px) {
+            .navbar-public {
+                justify-content: center;
+            }
+            .public-nav-links {
+                justify-content: center;
+                width: 100%;
+                gap: 12px;
+            }
         }
         .plans-grid {
             display: grid;
@@ -133,7 +151,7 @@ $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1 ORDER BY 
             <i class="fas fa-coins" style="color: var(--brand-magenta); font-size: 24px;"></i>
             <span style="font-weight: 700; font-size: 20px; color: var(--brand-magenta);">LUXE GOLD</span>
         </div>
-        <div style="display: flex; gap: 30px;">
+        <div class="public-nav-links">
             <a href="gold-plans.php" style="color: var(--brand-gold-pure); text-decoration: none; font-weight: 600;">Gold Plans</a>
             <a href="login.php" style="color: white; text-decoration: none; font-weight: 500;">Login</a>
             <a href="register.php" class="btn-gold" style="padding: 8px 20px; font-size: 14px;">Get Started</a>
