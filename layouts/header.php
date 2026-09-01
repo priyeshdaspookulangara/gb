@@ -96,13 +96,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <!-- Top Navbar -->
         <nav class="top-navbar">
             <div style="display: flex; align-items: center; gap: 15px;">
-                <button id="sidebar-toggle" class="hamburger-btn" aria-label="Toggle navigation menu">
+                <button id="sidebar-toggle" class="hamburger-btn" aria-label="Toggle navigation menu" title="Toggle navigation sidebar">
                     <i class="fas fa-bars"></i>
                 </button>
-                <div class="navbar-brand-mobile">
+                <a href="index.php" class="topbar-brand" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
                     <i class="fas fa-coins" style="color: var(--brand-magenta); font-size: 20px;"></i>
-                    <span style="font-weight: 700; font-size: 16px; color: var(--brand-magenta);">LUXE GOLD</span>
-                </div>
+                    <span style="font-weight: 700; font-size: 18px; color: var(--brand-magenta); letter-spacing: 0.5px;">LUXE GOLD</span>
+                </a>
                 <div class="search-form">
                     <i class="fas fa-search" style="opacity: 0.5;"></i>
                     <input type="text" placeholder="Search system...">

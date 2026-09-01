@@ -55,17 +55,31 @@ $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1 ORDER BY 
         .public-nav-links {
             display: flex;
             align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
+            gap: 20px;
         }
-        @media (max-width: 576px) {
-            .navbar-public {
-                justify-content: center;
+        .public-hamburger {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .public-hamburger {
+                display: flex;
             }
             .public-nav-links {
-                justify-content: center;
+                display: none;
                 width: 100%;
-                gap: 12px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding-top: 15px;
+            }
+            .public-nav-links.open {
+                display: flex;
+            }
+            .public-nav-links a {
+                padding: 10px 15px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 8px;
+                text-align: center;
             }
         }
         .plans-grid {
@@ -147,14 +161,19 @@ $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1 ORDER BY 
 <body>
 
     <nav class="navbar-public">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <i class="fas fa-coins" style="color: var(--brand-magenta); font-size: 24px;"></i>
-            <span style="font-weight: 700; font-size: 20px; color: var(--brand-magenta);">LUXE GOLD</span>
-        </div>
-        <div class="public-nav-links">
-            <a href="gold-plans.php" style="color: var(--brand-gold-pure); text-decoration: none; font-weight: 600;">Gold Plans</a>
-            <a href="login.php" style="color: white; text-decoration: none; font-weight: 500;">Login</a>
-            <a href="register.php" class="btn-gold" style="padding: 8px 20px; font-size: 14px;">Get Started</a>
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1200px; margin: 0 auto; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-coins" style="color: var(--brand-magenta); font-size: 24px;"></i>
+                <span style="font-weight: 700; font-size: 20px; color: var(--brand-magenta);">LUXE GOLD</span>
+            </div>
+            <button id="public-menu-toggle" class="hamburger-btn public-hamburger" aria-label="Toggle navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="public-nav-links" id="public-nav-links">
+                <a href="gold-plans.php" style="color: var(--brand-gold-pure); text-decoration: none; font-weight: 600;">Gold Plans</a>
+                <a href="login.php" style="color: white; text-decoration: none; font-weight: 500;">Login</a>
+                <a href="register.php" class="btn-gold" style="padding: 8px 20px; font-size: 14px;">Get Started</a>
+            </div>
         </div>
     </nav>
 
@@ -209,5 +228,14 @@ $schemes = $pdo->query("SELECT * FROM gold_schemes WHERE is_active = 1 ORDER BY 
         </div>
     </div>
 
+    <script>
+        const publicToggle = document.getElementById('public-menu-toggle');
+        const publicNav = document.getElementById('public-nav-links');
+        if (publicToggle && publicNav) {
+            publicToggle.addEventListener('click', () => {
+                publicNav.classList.toggle('open');
+            });
+        }
+    </script>
 </body>
 </html>

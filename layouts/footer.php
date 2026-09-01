@@ -26,10 +26,14 @@
         if (toggleBtn) {
             toggleBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (sidebar && sidebar.classList.contains('open')) {
-                    closeSidebar();
+                if (window.innerWidth <= 992) {
+                    if (sidebar && sidebar.classList.contains('open')) {
+                        closeSidebar();
+                    } else {
+                        openSidebar();
+                    }
                 } else {
-                    openSidebar();
+                    document.body.classList.toggle('sidebar-collapsed');
                 }
             });
         }

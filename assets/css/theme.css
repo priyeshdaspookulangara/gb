@@ -305,25 +305,32 @@ body.theme-light .node-hover-details {
 
 .hamburger-btn {
     background: transparent;
-    border: none;
-    color: white;
+    border: 1px solid var(--glass-border);
+    color: var(--brand-gold-pure);
     cursor: pointer;
-    font-size: 22px;
-    padding: 8px;
-    min-width: 44px;
-    min-height: 44px;
+    font-size: 18px;
+    padding: 8px 12px;
+    min-width: 42px;
+    min-height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
 }
 
 .hamburger-btn:hover {
     background: var(--glass-surface);
+    border-color: var(--brand-gold-pure);
+    box-shadow: 0 0 10px rgba(226, 183, 71, 0.3);
 }
 
-.navbar-brand-mobile {
+body.theme-light .hamburger-btn {
+    color: var(--brand-magenta);
+    border-color: rgba(194, 0, 103, 0.3);
+}
+
+.topbar-brand {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -832,11 +839,15 @@ tr:hover {
         box-shadow: none;
     }
 
-    .mobile-sidebar-close {
-        display: none;
+    body.sidebar-collapsed .sidebar {
+        transform: translateX(-100%);
     }
 
-    .navbar-brand-mobile {
+    body.sidebar-collapsed .main-wrapper {
+        margin-left: 0;
+    }
+
+    .mobile-sidebar-close {
         display: none;
     }
 
