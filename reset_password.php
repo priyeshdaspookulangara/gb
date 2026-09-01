@@ -56,12 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password - Gold Bullion System</title>
     <link rel="stylesheet" href="assets/css/theme.css">
     <style>
-        body { display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .box { width: 400px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; }
+        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px 16px; }
+        .box { width: 100%; max-width: 400px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: white; font-size: 14px; }
     </style>
 </head>
 <body>
