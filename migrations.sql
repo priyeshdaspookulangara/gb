@@ -32,7 +32,6 @@ ALTER TABLE transactions ADD COLUMN IF NOT EXISTS service_charge DECIMAL(15, 2) 
 ALTER TABLE milestone_redemptions ADD COLUMN IF NOT EXISTS gift_product VARCHAR(100) DEFAULT NULL;
 ALTER TABLE milestone_redemptions ADD COLUMN IF NOT EXISTS points_awarded INT DEFAULT 0;
 
--- 8. Create Withdrawals Table
 -- 8. Create Gold Schemes Table
 CREATE TABLE IF NOT EXISTS gold_schemes (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -53,7 +52,6 @@ CREATE TABLE IF NOT EXISTS gold_schemes (
 
 -- 9. Add scheme_id to bookings
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS scheme_id INT DEFAULT NULL;
-ALTER TABLE bookings ADD CONSTRAINT fk_booking_scheme FOREIGN KEY (scheme_id) REFERENCES gold_schemes(id) ON DELETE SET NULL;
 
 -- 10. Create Withdrawals Table
 CREATE TABLE IF NOT EXISTS withdrawals (
@@ -66,3 +64,6 @@ CREATE TABLE IF NOT EXISTS withdrawals (
     processed_at TIMESTAMP NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- 11. Allow Duplicate Emails (Drop Unique Index on email column if present)
+ALTER TABLE users DROP INDEX email;
