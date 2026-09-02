@@ -45,11 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Full name, email, and phone number are required.");
         }
 
-        // Check email uniqueness if email changed
-        $check_stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+        // Check email uniqueness case-insensitively if email changed
+        $check_stmt = $pdo->prepare("SELECT id FROM users WHERE LOWER(email) = LOWER(?) AND id != ?");
         $check_stmt->execute([$email, $target_id]);
         if ($check_stmt->fetch()) {
-            throw new Exception("Email address is already in use by another user.");
+            throw new Exception("The email address '$email' is already registered to another account.");
         }
 
         $pdo->beginTransaction();
