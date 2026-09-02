@@ -93,6 +93,73 @@ INSERT INTO gold_schemes (
 
 ---
 
+## 💡 Practical Use Cases & Examples
+
+Below are 3 concrete real-world use cases showing how to configure different types of gold schemes for various investor demographics:
+
+### Use Case 1: "Starter Express" Plan (Short-Term / Entry Level)
+Designed for new retail buyers wanting a low-barrier trial plan before making larger bookings.
+
+* **Form Fields Input:**
+  * **Scheme Code:** `GS18K`
+  * **Scheme Name:** `Starter 6-Month Gold Scheme`
+  * **Deposit (Rs):** `18000`
+  * **Maturity (Rs):** `30000`
+  * **Total Duration (Months):** `6`
+  * **Milestone 1 (Month):** `2` | **M1 Amount (Rs):** `8000`
+  * **Milestone 2 (Month):** `4` | **M2 Amount (Rs):** `10000`
+  * **Description:** `A compact 6-month maturation plan tailored for new investors and first-time bullion buyers.`
+
+* **SQL Snippet:**
+  ```sql
+  INSERT INTO gold_schemes (scheme_code, scheme_name, deposit_amount, maturity_amount, duration_months, milestone_1_month, milestone_1_amount, milestone_2_month, milestone_2_amount, description)
+  VALUES ('GS18K', 'Starter 6-Month Gold Scheme', 18000, 30000, 6, 2, 8000, 4, 10000, 'A compact 6-month maturation plan tailored for new investors and first-time bullion buyers.');
+  ```
+
+---
+
+### Use Case 2: "Standard Bullion Card" Plan (Core Flagship Scheme)
+The standard MLM matrix scheme for regular promoters and investors.
+
+* **Form Fields Input:**
+  * **Scheme Code:** `GS36K`
+  * **Scheme Name:** `Standard 11-Month Plan`
+  * **Deposit (Rs):** `36000`
+  * **Maturity (Rs):** `66000`
+  * **Total Duration (Months):** `11`
+  * **Milestone 1 (Month):** `4` | **M1 Amount (Rs):** `16000`
+  * **Milestone 2 (Month):** `8` | **M2 Amount (Rs):** `20000`
+  * **Description:** `Our signature 11-month gold bullion advance booking scheme with dual milestone redemption vouchers.`
+
+* **SQL Snippet:**
+  ```sql
+  INSERT INTO gold_schemes (scheme_code, scheme_name, deposit_amount, maturity_amount, duration_months, milestone_1_month, milestone_1_amount, milestone_2_month, milestone_2_amount, description)
+  VALUES ('GS36K', 'Standard 11-Month Plan', 36000, 66000, 11, 4, 16000, 8, 20000, 'Our signature 11-month gold bullion advance booking scheme with dual milestone redemption vouchers.');
+  ```
+
+---
+
+### Use Case 3: "High-Yield Collector" Plan (High-Value / Premium)
+Targeted at serious bullion investors and high-net-worth clients seeking high yield over 15 months.
+
+* **Form Fields Input:**
+  * **Scheme Code:** `GS72K`
+  * **Scheme Name:** `Premium 15-Month Gold Scheme`
+  * **Deposit (Rs):** `72000`
+  * **Maturity (Rs):** `150000`
+  * **Total Duration (Months):** `15`
+  * **Milestone 1 (Month):** `5` | **M1 Amount (Rs):** `35000`
+  * **Milestone 2 (Month):** `8` | **M2 Amount (Rs):** `50000`
+  * **Description:** `High-yield 15-month maturation plan designed for serious bullion collectors with maximum redemption value.`
+
+* **SQL Snippet:**
+  ```sql
+  INSERT INTO gold_schemes (scheme_code, scheme_name, deposit_amount, maturity_amount, duration_months, milestone_1_month, milestone_1_amount, milestone_2_month, milestone_2_amount, description)
+  VALUES ('GS72K', 'Premium 15-Month Gold Scheme', 72000, 150000, 15, 5, 35000, 8, 50000, 'High-yield 15-month maturation plan designed for serious bullion collectors with maximum redemption value.');
+  ```
+
+---
+
 ## 🔄 System Verification & Testing
 
 After creating a new scheme, perform these verification steps to confirm proper integration across the application:
