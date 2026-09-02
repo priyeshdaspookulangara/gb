@@ -4,87 +4,149 @@ require_once '../config/db.php';
 require_once '../auth/auth_helper.php';
 require_login();
 
-$user_id = $_SESSION['user_id'];
+// Determine target user (Admin can edit any user via ?id=, normal users edit themselves)
+$target_id = $_SESSION['user_id'];
+if ($_SESSION['role'] === 'admin' && isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $target_id = (int)$_GET['id'];
+}
+
 $message = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     check_csrf();
 
-    $full_name = $_POST['full_name'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $phone = $_POST['phone'] ?? '';
-    $bank_name = $_POST['bank_name'] ?? '';
-    $account_holder = $_POST['account_holder'] ?? '';
-    $account_number = $_POST['account_number'] ?? '';
-    $ifsc_code = $_POST['ifsc_code'] ?? '';
-    $branch_name = $_POST['branch_name'] ?? '';
+    $full_name = trim($_POST['full_name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $bank_name = trim($_POST['bank_name'] ?? '');
+    $account_holder = trim($_POST['account_holder'] ?? '');
+    $account_number = trim($_POST['account_number'] ?? '');
+    $ifsc_code = trim($_POST['ifsc_code'] ?? '');
+    $branch_name = trim($_POST['branch_name'] ?? '');
+    $role = trim($_POST['role'] ?? '');
+    $rank = trim($_POST['rank'] ?? '');
     $new_password = $_POST['new_password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
     try {
+        // Validate Password first before opening transaction
+        if (!empty($new_password)) {
+            if ($new_password !== $confirm_password) {
+                throw new Exception("New passwords do not match.");
+            }
+            if (strlen($new_password) < 6) {
+                throw new Exception("Password must be at least 6 characters long.");
+            }
+        }
+
+        // Validate basic inputs
+        if (empty($full_name) || empty($email) || empty($phone)) {
+            throw new Exception("Full name, email, and phone number are required.");
+        }
+
+        // Check email uniqueness if email changed
+        $check_stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+        $check_stmt->execute([$email, $target_id]);
+        if ($check_stmt->fetch()) {
+            throw new Exception("Email address is already in use by another user.");
+        }
+
         $pdo->beginTransaction();
 
         // Handle Profile Picture
+        $new_profile_pic = null;
         if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] === UPLOAD_ERR_OK) {
-            $allowed = ['jpg', 'jpeg', 'png'];
+            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
             $ext = strtolower(pathinfo($_FILES['profile_pic']['name'], PATHINFO_EXTENSION));
             if (in_array($ext, $allowed)) {
-                $filename = "pp_" . $user_id . "_" . time() . "." . $ext;
-                if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], "../uploads/profile/" . $filename)) {
-                    $pdo->prepare("UPDATE users SET profile_pic = ? WHERE id = ?")->execute([$filename, $user_id]);
-                    $_SESSION['profile_pic'] = $filename;
+                $filename = "pp_" . $target_id . "_" . time() . "." . $ext;
+                if (!is_dir("../uploads/profile/")) {
+                    mkdir("../uploads/profile/", 0777, true);
                 }
+                if (move_uploaded_file($_FILES['profile_pic']['tmp_name'], "../uploads/profile/" . $filename)) {
+                    $new_profile_pic = $filename;
+                    $pdo->prepare("UPDATE users SET profile_pic = ? WHERE id = ?")->execute([$filename, $target_id]);
+                    if ($target_id === $_SESSION['user_id']) {
+                        $_SESSION['profile_pic'] = $filename;
+                    }
+                } else {
+                    throw new Exception("Failed to save uploaded profile picture.");
+                }
+            } else {
+                throw new Exception("Invalid image format. Allowed formats: JPG, JPEG, PNG, WEBP.");
             }
         }
 
-        // 1. Update basic info
-        $stmt = $pdo->prepare("UPDATE users SET full_name = ?, email = ?, phone = ?, bank_name = ?, account_holder = ?, account_number = ?, ifsc_code = ?, branch_name = ? WHERE id = ?");
-        $stmt->execute([$full_name, $email, $phone, $bank_name, $account_holder, $account_number, $ifsc_code, $branch_name, $user_id]);
+        // Update basic info and bank details
+        if ($_SESSION['role'] === 'admin' && !empty($role)) {
+            $stmt = $pdo->prepare("UPDATE users SET full_name = ?, email = ?, phone = ?, bank_name = ?, account_holder = ?, account_number = ?, ifsc_code = ?, branch_name = ?, role = ?, `rank` = ? WHERE id = ?");
+            $stmt->execute([$full_name, $email, $phone, $bank_name, $account_holder, $account_number, $ifsc_code, $branch_name, $role, $rank ?: 'NONE', $target_id]);
+        } else {
+            $stmt = $pdo->prepare("UPDATE users SET full_name = ?, email = ?, phone = ?, bank_name = ?, account_holder = ?, account_number = ?, ifsc_code = ?, branch_name = ? WHERE id = ?");
+            $stmt->execute([$full_name, $email, $phone, $bank_name, $account_holder, $account_number, $ifsc_code, $branch_name, $target_id]);
+        }
 
-        // 2. Handle password update
+        // Update password if provided
         if (!empty($new_password)) {
-            if ($new_password !== $confirm_password) {
-                throw new Exception("Passwords do not match.");
-            }
             $hashed = password_hash($new_password, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
-            $stmt->execute([$hashed, $user_id]);
+            $stmt->execute([$hashed, $target_id]);
         }
 
         $pdo->commit();
-        $_SESSION['full_name'] = $full_name; // Update session
+
+        // Update active session if editing own profile
+        if ($target_id === $_SESSION['user_id']) {
+            $_SESSION['full_name'] = $full_name;
+        }
+
         $message = "Profile updated successfully!";
     } catch (Exception $e) {
-        if ($pdo->inTransaction()) $pdo->rollBack();
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
         $error = $e->getMessage();
     }
 }
 
-// Fetch current data
+// Fetch fresh current data
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-$stmt->execute([$user_id]);
+$stmt->execute([$target_id]);
 $user = $stmt->fetch();
+
+if (!$user) {
+    die("User not found.");
+}
 
 require_once '../layouts/header.php';
 ?>
 
 <div class="glass-card" style="max-width: 900px; margin: 0 auto;">
-    <h2 class="gold-gradient-text">Account Profile & Settings</h2>
-    <p class="text-muted">Manage your personal information and financial destination details.</p>
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div>
+            <h2 class="gold-gradient-text">
+                <?php echo ($target_id === $_SESSION['user_id']) ? 'Account Profile & Settings' : 'Edit Member Profile (@' . htmlspecialchars($user['username']) . ')'; ?>
+            </h2>
+            <p class="text-muted">Manage personal information and financial destination details.</p>
+        </div>
+        <?php if ($_SESSION['role'] === 'admin' && $target_id !== $_SESSION['user_id']): ?>
+            <a href="admin_users.php" class="btn-primary" style="padding: 8px 16px; font-size: 12px; text-decoration: none;">
+                <i class="fas fa-arrow-left"></i> Back to Directory
+            </a>
+        <?php endif; ?>
+    </div>
 
     <?php if ($message): ?><p class="status approved" style="margin-top: 20px;"><?php echo $message; ?></p><?php endif; ?>
     <?php if ($error): ?><p class="status rejected" style="margin-top: 20px;"><?php echo $error; ?></p><?php endif; ?>
 
-    <form method="POST" enctype="multipart/form-data" style="margin-top: 40px;">
+    <form method="POST" enctype="multipart/form-data" style="margin-top: 30px;">
         <?php csrf_input(); ?>
         <div style="display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;">
             <!-- Profile Pic Section -->
             <div style="text-align: center; flex: 0 0 200px;">
                 <div style="position: relative; display: inline-block;">
-                    <?php
-                    $pp = get_profile_pic_url($user['profile_pic'], $user['full_name']);
-                    ?>
+                    <?php $pp = get_profile_pic_url($user['profile_pic'], $user['full_name']); ?>
                     <img id="pp-preview" src="<?php echo $pp; ?>" style="width: 180px; height: 180px; border-radius: 20px; object-fit: cover; border: 2px solid var(--brand-gold-pure); box-shadow: var(--state-glow);">
                     <div style="margin-top: 15px;">
                         <label class="btn-primary" style="font-size: 11px; cursor: pointer; padding: 8px 15px;">
@@ -110,9 +172,36 @@ require_once '../layouts/header.php';
                     <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>" required class="form-control">
                 </div>
                 <div class="form-group">
-                    <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Security (New Password)</label>
+                    <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">New Password (Optional)</label>
                     <input type="password" name="new_password" class="form-control" placeholder="••••••••">
                 </div>
+                <div class="form-group">
+                    <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Confirm New Password</label>
+                    <input type="password" name="confirm_password" class="form-control" placeholder="••••••••">
+                </div>
+
+                <?php if ($_SESSION['role'] === 'admin'): ?>
+                    <div class="form-group">
+                        <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">System Role</label>
+                        <select name="role" class="form-control">
+                            <option value="customer" <?php echo ($user['role'] === 'customer') ? 'selected' : ''; ?>>Customer</option>
+                            <option value="promoter" <?php echo ($user['role'] === 'promoter') ? 'selected' : ''; ?>>Promoter</option>
+                            <option value="admin" <?php echo ($user['role'] === 'admin') ? 'selected' : ''; ?>>Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Career Rank</label>
+                        <select name="rank" class="form-control">
+                            <?php
+                            $ranks = ['NONE', 'LCE', 'BCE', 'EPE', 'ME', 'SME', 'MM', 'GE', 'CE'];
+                            foreach ($ranks as $r) {
+                                $selected = ($user['rank'] === $r) ? 'selected' : '';
+                                echo "<option value='$r' $selected>$r</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -128,8 +217,8 @@ require_once '../layouts/header.php';
             }
         </script>
 
-        <div style="margin-top: 50px; padding: 30px; border-radius: 15px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);">
-            <h3 class="gold-text" style="margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+        <div style="margin-top: 40px; padding: 25px; border-radius: 15px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border);">
+            <h3 class="gold-text" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 18px;">
                 <i class="fas fa-university"></i> Banking & Payout Details
             </h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
@@ -156,7 +245,7 @@ require_once '../layouts/header.php';
             </div>
         </div>
 
-        <button type="submit" class="btn-gold" style="width: 100%; margin-top: 40px; padding: 18px; font-size: 16px;">
+        <button type="submit" class="btn-gold" style="width: 100%; margin-top: 30px; padding: 16px; font-size: 15px;">
             <i class="fas fa-save" style="margin-right: 10px;"></i> Save Profile Changes
         </button>
     </form>
